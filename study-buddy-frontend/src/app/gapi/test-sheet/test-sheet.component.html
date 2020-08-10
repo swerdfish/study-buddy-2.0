@@ -1,1 +1,6 @@
 <p>test-sheet works!</p>
+
+<input *ngIf=!isSignedIn (click)="handleAuthClick()" type=button id=authorize_button value="Sign In">
+<input *ngIf=isSignedIn (click)="handleSignoutClick()" type=button id=signout_button value="Sign Out">
+
+<pre id="content"></pre>

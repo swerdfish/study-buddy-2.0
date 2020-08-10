@@ -12,12 +12,13 @@ import {
 import { TestSheetComponent } from './test-sheet/test-sheet.component';
 
 let gapiClientConfig: NgGapiClientConfig = {
-  client_id: '',
+  client_id: '274047880448-v1c8r2381n7v02fkv3kuteckdu0l0g48.apps.googleusercontent.com',
   discoveryDocs: ['https://analyticsreporting.googleapis.com/$discovery/rest?version=v4'],
   ux_mode: 'redirect',
   redirect_uri: 'https://ng-gapi-example.stackblitz.io/redirect',
   scope: [
-    'https://www.googleapis.com/auth/userinfo.profile'
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/spreadsheets.readonly'
   ].join(' ')
 }
 
