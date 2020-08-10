@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+import * as credKey from '../../../../../../sheets-cred-key_studyBuddy.json';
+
+declare var gapi: any;
+
 @Component({
   selector: 'app-test-sheet',
   templateUrl: './test-sheet.component.html',
@@ -8,27 +12,20 @@ import { Component, OnInit } from '@angular/core';
 export class TestSheetComponent implements OnInit {
 
   // Client ID and API key from the Developer Console
-  CLIENT_ID = '274047880448-v1c8r2381n7v02fkv3kuteckdu0l0g48.apps.googleusercontent.com';
-  API_KEY = 'AIzaSyBj4QkG4I7D2P1NiovTMpspWnoXtzD0XRc';
+  CLIENT_ID = credKey.client_id;
+  API_KEY = credKey.api_key;
 
   // Array of API discovery doc URLs for APIs used by the quickstart
-  DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
+  DISCOVERY_DOCS = credKey.discovery_docs;
 
   // Authorization scopes required by the API; multiple scopes can be
   // included, separated by spaces.
-  SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
+  SCOPES = credKey.scopes.join(" ");
 
   isSignedIn = false;
 
   constructor() {
     this.handleClientLoad();
-    // this.gapiService.onLoad().subscribe(
-    //   loaded => {
-    //     console.log(loaded);
-    //     this.listMajors();
-    //   }
-    // );
-    // console.log(this.gapiService.getConfig());
   }
 
   ngOnInit(): void {
@@ -91,7 +88,8 @@ export class TestSheetComponent implements OnInit {
         // Handle the initial sign-in state.
         this.isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get()
         this.listMajors();
-      }, function (error) {
+        console.log(gapi);
+      }, function (error: any) {
         this.appendPre(JSON.stringify(error, null, 2));
       });
     });

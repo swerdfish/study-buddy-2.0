@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, from } from 'rxjs';
 
-import * as credKey from '../../../../sheets-cred-key_studyBuddy.json'
+import * as credKey from '../../../../sheets-cred-key_studyBuddy.json';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SheetServiceService {
-
-  isSignedIn: boolean;
 
   constructor() {
     // Initialize gapi
