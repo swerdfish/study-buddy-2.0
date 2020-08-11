@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 
 import * as credKey from '../../../../../../sheets-cred-key_studyBuddy.json';
 
-declare var gapi: any;
+import { Observable, from } from 'rxjs';
+import { concatMap, flatMap, map, switchMap } from 'rxjs/operators';
+import { GoogleApiService } from 'src/app/google-api.service';
+
+// import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
+
+//declare var gapi: any;
 
 @Component({
   selector: 'app-test-sheet',
@@ -11,21 +17,161 @@ declare var gapi: any;
 })
 export class TestSheetComponent implements OnInit {
 
-  // Client ID and API key from the Developer Console
-  CLIENT_ID = credKey.client_id;
-  API_KEY = credKey.api_key;
-
-  // Array of API discovery doc URLs for APIs used by the quickstart
-  DISCOVERY_DOCS = credKey.discovery_docs;
-
-  // Authorization scopes required by the API; multiple scopes can be
-  // included, separated by spaces.
-  SCOPES = credKey.scopes.join(" ");
-
   isSignedIn = false;
+  header: string[];
+  output: string[][];
+  testString: string;
+  spreadsheetId: string = '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms';
+  rangeA1: string = 'Class Data';
+  sheetData;
 
-  constructor() {
-    this.handleClientLoad();
+  // spreadsheet: GoogleSpreadsheet;
+  // worksheet: GoogleSpreadsheetWorksheet;
+
+  constructor(private zone: NgZone, private gserv: GoogleApiService) {
+    // this.gserv.googleApi.pipe(
+    //   map(() => from(
+    //     gapi.client.init({
+    //       apiKey: credKey.api_key,
+    //       clientId: credKey.client_id,
+    //       discoveryDocs: credKey.discovery_docs,
+    //       scope: credKey.scopes.join(" ")
+    //     }))
+    //   )
+    // ).pipe(
+    //   map(() => from(
+    //     gapi.client.sheets.spreadsheets.values.get({
+    //       spreadsheetId: this.spreadsheetId,
+    //       range: this.rangeA1
+    //     }))
+    //   )
+    // ).subscribe(result =>
+    //   console.log(result)
+    // );
+
+    // this.gserv.googleApi.pipe(
+    //   flatMap(() => from(this.gserv.initGapiClient())),
+    //   flatMap(() => from(this.gserv.getSheetValues(this.spreadsheetId, this.rangeA1)))
+    // ).subscribe(response => {
+    //   this.zone.run(() => {
+    //     this.output = response.result.values;
+    //     console.log(this.output);
+    //   })
+    // })
+
+    this.gserv.getValues(this.spreadsheetId, this.rangeA1).subscribe(response => {
+      this.zone.run(() => {
+        this.header = response.result.values[0];
+        this.output = response.result.values;
+        this.output.shift();
+      })
+    })
+
+    this.gserv.getAllSheetInfo(this.spreadsheetId).subscribe(response => {
+      this.sheetData = response.result.sheets;
+      console.log(this.sheetData);
+    })
+
+    // this.gserv.googleApi.subscribe(() => {
+    //   if (this.gserv.isApiInitialized) {
+    //     console.log("initialized");
+    //     this.gserv.getSheetValues(this.spreadsheetId, this.rangeA1)
+    //       .then(response => this.zone.run(() => {
+    //         this.output = response.result.values;
+    //       }))
+    //     this.gserv.getAllSheets(this.spreadsheetId).then(response => this.zone.run(() => {
+    //       this.sheetData = response.result.sheets;
+    //       console.log(this.sheetData);
+    //     }))
+    //   } else {
+    //     console.log('about to be initialized');
+    //     let initGapi = from(this.gserv.initGapiClient());
+    //     initGapi.subscribe(() => {
+    //       this.gserv.getSheetValues(this.spreadsheetId, this.rangeA1)
+    //         .then(response => this.zone.run(() => {
+    //           this.output = response.result.values;
+    //         }));
+    //     });
+    //     initGapi.subscribe(() => {
+    //       this.gserv.getAllSheets(this.spreadsheetId)
+    //         .then(response => this.zone.run(() => {
+    //           this.sheetData = response.result.sheets;
+    //           console.log(this.sheetData);
+    //         }));
+    //     });
+    //   }
+    // })
+
+    // this.gserv.googleApi.subscribe(() => {
+    //   if (this.gserv.isApiInitialized) {
+    //     console.log("initialized");
+    //     gapi.client.sheets.spreadsheets.values.get({
+    //       spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
+    //       range: 'Class Data!A2:E'
+    //     }).then(response => zone.run(() => {
+    //       this.output = response.result.values;
+    //     }));
+    //   } else {
+    //     console.log("will be initialized");
+    //     gapi.client.init({
+    //       apiKey: credKey.api_key,
+    //       clientId: credKey.client_id,
+    //       discoveryDocs: credKey.discovery_docs,
+    //       scope: credKey.scopes.join(" ")
+    //     }).then(() => {
+    //       gapi.client.sheets.spreadsheets.values.get({
+    //         spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
+    //         range: 'Class Data!A2:E'
+    //       }).then(response => zone.run(() => {
+    //         this.output = response.result.values;
+    //         console.log(this.output);
+    //       }));
+    //     });
+    //   }
+    // })
+
+    // const loadGapi = new Observable(observer => {
+    //   gapi.load('client:auth2', value => {
+    //     observer.next(value);
+    //     observer.complete();
+    //   })
+    // })
+    // loadGapi.subscribe(() => {
+    //   gapi.client.init({
+    //     apiKey: credKey.api_key,
+    //     clientId: credKey.client_id,
+    //     discoveryDocs: credKey.discovery_docs,
+    //     scope: credKey.scopes.join(" ")
+    //   }).then(() => {
+    //     console.log(this.testString);
+    //     this.testString = "Hi";
+    //     console.log(this.testString);
+    //     gapi.client.sheets.spreadsheets.values.get({
+    //       spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
+    //       range: 'Class Data!A2:E'
+    //     }).then(response => zone.run(() => {
+    //       this.output = response.result.values;
+    //       console.log(this.output);
+    //     }))
+    //   })
+    // });
+    // gapi.load('client:auth2', () => {
+    //   gapi.client.init({
+    //     apiKey: credKey.api_key,
+    //     clientId: credKey.client_id,
+    //     discoveryDocs: credKey.discovery_docs,
+    //     scope: credKey.scopes.join(" ")
+    //   }).then(() => {
+    //     gapi.client.sheets.spreadsheets.values.get({
+    //       spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
+    //       range: 'Class Data!A2:E'
+    //     }).then(response => {
+    //       this.output = response.result.values;
+    //       console.log(this.output);
+    //     })
+    //   })
+    // });
+    //this.handleClientLoad();
   }
 
   ngOnInit(): void {
@@ -52,7 +198,10 @@ export class TestSheetComponent implements OnInit {
       spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
       range: 'Class Data!A2:E',
     }).then(response => {
+      // this.output = response.result;
       var range = response.result;
+      this.output = range.values;
+      console.log(this.output);
       if (range.values.length > 0) {
         this.appendPre('Name, Major:');
         for (let i = 0; i < range.values.length; i++) {
@@ -77,10 +226,10 @@ export class TestSheetComponent implements OnInit {
   handleClientLoad() {
     gapi.load('client:auth2', () => {
       gapi.client.init({
-        apiKey: this.API_KEY,
-        clientId: this.CLIENT_ID,
-        discoveryDocs: this.DISCOVERY_DOCS,
-        scope: this.SCOPES
+        apiKey: credKey.api_key,
+        clientId: credKey.client_id,
+        discoveryDocs: credKey.discovery_docs,
+        scope: credKey.scopes.join(" ")
       }).then(() => {
         // Listen for sign-in state changes.
         gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus);
@@ -88,7 +237,6 @@ export class TestSheetComponent implements OnInit {
         // Handle the initial sign-in state.
         this.isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get()
         this.listMajors();
-        console.log(gapi);
       }, function (error: any) {
         this.appendPre(JSON.stringify(error, null, 2));
       });
@@ -101,10 +249,10 @@ export class TestSheetComponent implements OnInit {
     */
   initClient() {
     gapi.client.init({
-      apiKey: this.API_KEY,
-      clientId: this.CLIENT_ID,
-      discoveryDocs: this.DISCOVERY_DOCS,
-      scope: this.SCOPES
+      apiKey: credKey.api_key,
+      clientId: credKey.client_id,
+      discoveryDocs: credKey.discovery_docs,
+      scope: credKey.scopes.join(" ")
     }).then(function () {
       // Listen for sign-in state changes.
       gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus);

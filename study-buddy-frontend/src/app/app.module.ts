@@ -11,6 +11,7 @@ import { GapiModule } from './gapi/gapi.module';
 
 import { MaterialModule } from './material/material.module';
 import { NavbarComponent } from './navbar/navbar.component';
+import { GoogleApiService } from './google-api.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     GapiModule,
     MaterialModule
   ],
-  providers: [],
+  providers: [GoogleApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

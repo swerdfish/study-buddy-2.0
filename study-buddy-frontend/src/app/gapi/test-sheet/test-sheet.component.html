@@ -4,3 +4,12 @@
 <input *ngIf=isSignedIn (click)="handleSignoutClick()" type=button id=signout_button value="Sign Out">
 
 <pre id="content"></pre>
+
+<table *ngIf=output>
+    <tr>
+        <th *ngFor="let head of header">{{head}}</th>
+    </tr>
+    <tr *ngFor="let out of output">
+        <td *ngFor="let o of out">{{o}}</td>
+    </tr>
+</table>
