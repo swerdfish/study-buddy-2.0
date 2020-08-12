@@ -9,22 +9,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { GapiModule } from './gapi/gapi.module';
 
-import { MaterialModule } from './material/material.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { GoogleApiService } from './google-api.service';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent
+    NavbarComponent,
+    LandingPageComponent
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
-    GapiModule,
-    MaterialModule
+    GapiModule
   ],
   providers: [GoogleApiService],
   bootstrap: [AppComponent]
