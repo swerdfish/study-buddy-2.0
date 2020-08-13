@@ -53,30 +53,30 @@ export class MakeBasicDeckComponent implements OnInit {
     this.gserv.getAllSheetInfo(this.spreadsheetId).subscribe(
       response => {
         console.log(response);
-        let title: string;
         for (let s = 0; s < response.result.sheets.length; s++) {
-          title = response.result.sheets[s].properties.title;
-        }
-        this.gserv.getSheetValues(this.spreadsheetId,
-          // `'${title}'!${this.queCol}:${this.queCol}, '${title}'!${this.ansCol}:${this.ansCol}`).then(
-          `'${title}'!${this.queCol}:${this.ansCol}`).then(
-            resp => {
-              let deck = new FlashcardDeck(this.spreadsheetId, title, this.queCol, this.ansCol, this.gserv, this.headerRows);
-              if (qThenA) {
-                for (let value of resp.result.values.slice(this.headerRows)) {
-                  deck.cards.push(new Flashcard(value[0], value[value.length - 1]));
+          let title = response.result.sheets[s].properties.title;
+          this.gserv.getSheetValues(this.spreadsheetId,
+            // `'${title}'!${this.queCol}:${this.queCol}, '${title}'!${this.ansCol}:${this.ansCol}`).then(
+            `'${title}'!${this.queCol}:${this.ansCol}`).then(
+              resp => {
+                let deck = new FlashcardDeck(this.spreadsheetId, title, this.queCol, this.ansCol, this.gserv, this.headerRows);
+                if (qThenA) {
+                  for (let value of resp.result.values.slice(this.headerRows)) {
+                    deck.cards.push(new Flashcard(value[0], value[value.length - 1]));
+                  }
+                } else {
+                  for (let value of resp.result.values.slice(this.headerRows)) {
+                    deck.cards.push(new Flashcard(value[value.length - 1], value[0]));
+                  }
                 }
-              } else {
-                for (let value of resp.result.values.slice(this.headerRows)) {
-                  deck.cards.push(new Flashcard(value[value.length - 1], value[0]));
-                }
+                this.decks.push(deck);
+                console.log(this.decks);
               }
-              this.decks.push(deck);
-            }
-          ).catch(err => {
-            this.errorCode = err.result.error.code;
-            this.errorMessage = err.result.error.message;
-          });
+            ).catch(err => {
+              this.errorCode = err.result.error.code;
+              this.errorMessage = err.result.error.message;
+            });
+        }
         this.errorCode = undefined;
         this.submitted = true;
       },
