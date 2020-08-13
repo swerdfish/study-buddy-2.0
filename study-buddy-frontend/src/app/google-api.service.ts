@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import * as credKey from '../../../../sheets-cred-key_studyBuddy.json';
 import { Subject, Observable, from } from 'rxjs';
@@ -18,7 +18,7 @@ export class GoogleApiService {
   );
   public isApiInitialized: boolean = false;
 
-  constructor(private zone: NgZone) {
+  constructor() {
     this.loadScript();
     this.googleApi.subscribe(() => {
       gapi.client.init({
@@ -44,7 +44,27 @@ export class GoogleApiService {
     );
   }
 
-  private async initGapiClient() {
+  getAllValues(spreadsheetId: string) {
+    return from(gapi.client.init({
+      apiKey: credKey.api_key,
+      clientId: credKey.client_id,
+      discoveryDocs: credKey.discovery_docs,
+      scope: credKey.scopes.join(" ")
+    }).then(() => gapi.client.sheets.spreadsheets.get({
+      spreadsheetId: spreadsheetId
+    }))).pipe(
+      flatMap(response => new Observable(observer => {
+        for (let sheet of response.result.sheets) {
+          this.getSheetValues(spreadsheetId, `${sheet.properties.title}`).then(
+            resp => {
+              observer.next(resp.result.values);
+            });
+        }
+      }))
+    );
+  }
+
+  async initGapiClient() {
     if (this.isApiInitialized) {
       return null;
     } else {
@@ -59,14 +79,14 @@ export class GoogleApiService {
     }
   }
 
-  private async getSheetValues(spreadsheetId: string, range: string) {
+  async getSheetValues(spreadsheetId: string, range: string) {
     return gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: spreadsheetId,
       range: range
     })
   }
 
-  private async getAllSheets(spreadsheetId: string) {
+  async getAllSheets(spreadsheetId: string) {
     return gapi.client.sheets.spreadsheets.get({
       spreadsheetId: spreadsheetId
     });

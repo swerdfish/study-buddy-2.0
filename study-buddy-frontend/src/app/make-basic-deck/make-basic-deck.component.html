@@ -1,21 +1,7 @@
-<!-- <input id="sheetId" name="sheetId" class="form-control" required minlength="4" appForbiddenName="bob"
-    [(ngModel)]="sheetId" #name="ngModel">
-
-<div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
-
-    <div *ngIf="name.errors.required">
-        Name is required.
-    </div>
-    <div *ngIf="name.errors.minlength">
-        Name must be at least 4 characters long.
-    </div>
-    <div *ngIf="name.errors.forbiddenName">
-        Name cannot be Bob.
-    </div>
-
-</div> -->
-
 <form class="section" #deckForm="ngForm" (ngSubmit)="previewDecks()">
+
+    <h1 class="title">Create a Flashcard Deck</h1>
+
     <div class="field">
         <label class="label">Spreadsheet URL</label>
         <input class="input" type="text" required [(ngModel)]=spreadsheetUrl id="ssurl" name="ssurl" #ssurl="ngModel"
@@ -29,6 +15,7 @@
             </p>
         </div>
     </div>
+
     <div class="field is-horizontal">
         <div class="field-body">
             <div class="field">
@@ -48,9 +35,22 @@
         </div>
     </div>
 
+    <div class="field">
+        <label class="label">
+            <input class="checkbox" type="checkbox" name="header" #header="ngModel" [(ngModel)]="headerPresent">
+            Skip Header?
+        </label>
+    </div>
+    <div class="field" *ngIf="headerPresent">
+        <label class="label">How many header rows?</label>
+        <input class="input" type="number" id="hrows" name="hrows" #hrows="ngModel" [(ngModel)]="headerRows" required
+            min=1>
+    </div>
+
     <div class="field is-grouped">
         <div class="control">
-            <input [disabled]="deckForm.invalid" type="submit" class="button is-link" value="Submit">
+            <input [disabled]="deckForm.invalid || (headerPresent && (headerRows <=0 || headerRows%1!=0))" type="submit"
+                class="button is-link" value="Submit Sheet">
         </div>
         <div class="control">
             <a routerLink="/home"><button class="button is-link is-light">Home</button></a>
@@ -69,5 +69,45 @@
         <p>
             The provided URL does not correspond to an existing Google Spreadsheet.
         </p>
+    </div>
+
+    <div *ngIf="errorCode==400" class="notification is-danger is-light">
+        <b>400 Bad Request</b>
+        <p>{{errorMessage}}</p>
+    </div>
+
+    <div *ngIf="errorCode < 0" class="notification is-danger is-light">
+        <b>Improper Columns</b>
+        <p>{{errorMessage}}</p>
+    </div>
+
+    <div *ngIf="decks.length">
+        <h1 class="title is-4">Preview Flashcard Decks</h1>
+        <div *ngFor="let deck of decks">
+            <label class="label">{{deck.title}}</label>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Answer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let card of deck.cards | slice:0:4">
+                        <td>{{card.question}}</td>
+                        <td>{{card.answer}}</td>
+                    </tr>
+                    <tr *ngIf="deck.cards.length > 4">
+                        <td>{{deck.cards.length-4}} more...</td>
+                        <td>{{deck.cards.length-4}} more...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="control">
+        <input [disabled]="!submitted" type="button" class="button is-link" value="Create Deck(s)"
+            (click)="createDecks()">
     </div>
 </form>

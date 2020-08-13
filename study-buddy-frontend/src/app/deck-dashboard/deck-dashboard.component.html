@@ -1,0 +1,48 @@
+<section class="section">
+
+    <div *ngIf="decks.length else noDecks">
+        <h1 class="title">Preview Flashcard Decks</h1>
+        <div *ngFor="let deck of decks">
+            <label class="label">{{deck.title}}</label>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Answer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let card of deck.cards | slice:0:4">
+                        <td>{{card.question}}</td>
+                        <td>{{card.answer}}</td>
+                    </tr>
+                    <tr *ngIf="deck.cards.length > 4">
+                        <td>{{deck.cards.length-4}} more...</td>
+                        <td>{{deck.cards.length-4}} more...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <ng-template #noDecks>
+        <h1 class="title">No Flashcard Decks Found</h1>
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-primary">Sign Up</button>
+            </div>
+            <div class="control">
+                <button class="button is-primary is-light">Log In</button>
+            </div>
+        </div>
+        <div class="field is-grouped">
+            <div class="control">
+                <a routerLink="/basic-deck"><button class="button is-link">Make Basic Deck</button></a>
+            </div>
+            <div class="control">
+                <a routerLink="/home"><button class="button is-link is-light">Home</button></a>
+            </div>
+        </div>
+    </ng-template>
+
+</section>

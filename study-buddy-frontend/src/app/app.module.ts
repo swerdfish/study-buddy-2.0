@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Injector } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 
@@ -14,13 +14,17 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { GoogleApiService } from './google-api.service';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { MakeBasicDeckComponent } from './make-basic-deck/make-basic-deck.component';
+import { DeckDashboardComponent } from './deck-dashboard/deck-dashboard.component';
+import { DeckSlipComponent } from './deck-slip/deck-slip.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     LandingPageComponent,
-    MakeBasicDeckComponent
+    MakeBasicDeckComponent,
+    DeckDashboardComponent,
+    DeckSlipComponent
   ],
   imports: [
     AppRoutingModule,
@@ -33,4 +37,13 @@ import { MakeBasicDeckComponent } from './make-basic-deck/make-basic-deck.compon
   providers: [GoogleApiService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  // /**
+  //    * Allows for retrieving singletons using `AppModule.injector.get(MyService)`
+  //    * This is good to prevent injecting the service as constructor parameter.
+  //    */
+  // static injector: Injector;
+  // constructor(injector: Injector) {
+  //   AppModule.injector = injector;
+  // }
+}
