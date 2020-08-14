@@ -23,6 +23,7 @@ export class MakeBasicDeckComponent implements OnInit {
   headerPresent: boolean;
   headerRows: number;
   submitted: boolean;
+  loading: boolean;
 
   constructor(private deckserv: FlashcardDeckService, private gserv: GoogleApiService, private router: Router) {
     this.queCol = "A";
@@ -31,12 +32,14 @@ export class MakeBasicDeckComponent implements OnInit {
     this.headerPresent = false;
     this.headerRows = 0;
     this.submitted = false;
+    this.loading = false;
   }
 
   ngOnInit(): void {
   }
 
   previewDecks() {
+    this.loading = true;
     this.decks = [];
     let qThenA: boolean = true;;
     if (this.queCol == this.ansCol) {
@@ -53,6 +56,15 @@ export class MakeBasicDeckComponent implements OnInit {
     this.gserv.getAllSheetInfo(this.spreadsheetId).subscribe(
       response => {
         console.log(response);
+        // Google Sheets will not let worksheets in the same spreadsheet share the same name.
+        // let titles = {};
+        // for (let sheet of response.result.sheets) {
+        //   if (sheet.properties.title in titles) {
+        //     throw new Error("Cannot have sheets with the same name.");
+        //   } else {
+        //     titles[sheet.properties.title] = 1;
+        //   }
+        // }
         for (let s = 0; s < response.result.sheets.length; s++) {
           let title = response.result.sheets[s].properties.title;
           this.gserv.getSheetValues(this.spreadsheetId,
@@ -79,9 +91,11 @@ export class MakeBasicDeckComponent implements OnInit {
         }
         this.errorCode = undefined;
         this.submitted = true;
+        this.loading = false;
       },
       err => {
         this.errorCode = err.status;
+        this.loading = false;
       }
     );
   }

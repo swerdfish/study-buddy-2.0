@@ -1,27 +1,28 @@
 <section class="section">
 
     <div *ngIf="decks.length else noDecks">
-        <h1 class="title">Preview Flashcard Decks</h1>
-        <div *ngFor="let deck of decks">
-            <label class="label">{{deck.title}}</label>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Question</th>
-                        <th>Answer</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let card of deck.cards | slice:0:4">
-                        <td>{{card.question}}</td>
-                        <td>{{card.answer}}</td>
-                    </tr>
-                    <tr *ngIf="deck.cards.length > 4">
-                        <td>{{deck.cards.length-4}} more...</td>
-                        <td>{{deck.cards.length-4}} more...</td>
-                    </tr>
-                </tbody>
-            </table>
+        <h1 class="title">My Flashcard Decks</h1>
+        <div class="columns">
+            <div class="column">
+                <div *ngFor="let deck of decks; let i = index">
+                    <app-deck-slip *ngIf="i % 4 == 0" [deck]=deck></app-deck-slip>
+                </div>
+            </div>
+            <div class="column">
+                <div *ngFor="let deck of decks; let i = index">
+                    <app-deck-slip *ngIf="i % 4 == 1" [deck]=deck></app-deck-slip>
+                </div>
+            </div>
+            <div class="column">
+                <div *ngFor="let deck of decks; let i = index">
+                    <app-deck-slip *ngIf="i % 4 == 2" [deck]=deck></app-deck-slip>
+                </div>
+            </div>
+            <div class="column">
+                <div *ngFor="let deck of decks; let i = index">
+                    <app-deck-slip *ngIf="i % 4 == 3" [deck]=deck></app-deck-slip>
+                </div>
+            </div>
         </div>
     </div>
 

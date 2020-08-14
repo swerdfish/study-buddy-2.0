@@ -1,0 +1,49 @@
+<section class="section">
+
+    <div class="container">
+
+        <h1 class="title">{{deck.title}}</h1>
+
+        <div class="columns is-centered">
+
+            <div class="field is-grouped">
+                <button class="button is-light is-large" (click)="prevCard()">
+                    <span class="icon is-large">
+                        <i class="fas fa-chevron-left"></i>
+                    </span>
+                </button>
+
+                <div class="column is-half">
+                    <div class="card">
+                        <a (click)="flipCard()">
+                            <div class="card-content">
+                                <p class="title" *ngIf="deck.cards.length && showQuestion">
+                                    {{deck.cards[currentCardIndex]["question"]}}
+                                </p>
+                                <p class="subtitle" *ngIf="deck.cards.length && !showQuestion">
+                                    {{deck.cards[currentCardIndex]["answer"]}}
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <button class="button is-light is-large" (click)="nextCard()">
+                    <span class="icon is-large">
+                        <i class="fas fa-chevron-right"></i>
+                    </span>
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div class="field is-grouped">
+        <button class="button is-link" routerLink="/dashboard">Deck Dashboard</button>
+        <button class="button is-link is-light" routerLink="/home">Home</button>
+    </div>
+
+</section>

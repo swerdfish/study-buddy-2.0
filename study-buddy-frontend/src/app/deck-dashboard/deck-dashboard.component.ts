@@ -11,7 +11,8 @@ export class DeckDashboardComponent implements OnInit {
 
   decks: FlashcardDeck[];
 
-  constructor(private deckserv: FlashcardDeckService) { }
+  constructor(private deckserv: FlashcardDeckService) {
+  }
 
   ngOnInit(): void {
     this.deckserv.currentDecks.subscribe(decks => this.decks = decks);

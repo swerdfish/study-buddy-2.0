@@ -16,6 +16,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { MakeBasicDeckComponent } from './make-basic-deck/make-basic-deck.component';
 import { DeckDashboardComponent } from './deck-dashboard/deck-dashboard.component';
 import { DeckSlipComponent } from './deck-slip/deck-slip.component';
+import { ViewDeckComponent } from './view-deck/view-deck.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { DeckSlipComponent } from './deck-slip/deck-slip.component';
     LandingPageComponent,
     MakeBasicDeckComponent,
     DeckDashboardComponent,
-    DeckSlipComponent
+    DeckSlipComponent,
+    ViewDeckComponent
   ],
   imports: [
     AppRoutingModule,

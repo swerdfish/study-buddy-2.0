@@ -81,6 +81,8 @@
         <p>{{errorMessage}}</p>
     </div>
 
+    <progress *ngIf="loading" class="progress is-primary">30%</progress>
+
     <div *ngIf="decks.length">
         <h1 class="title is-4">Preview Flashcard Decks</h1>
         <div *ngFor="let deck of decks">
