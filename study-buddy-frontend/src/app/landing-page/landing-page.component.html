@@ -7,7 +7,15 @@
             <h2 class="subtitle">
                 Your buddy to help you study is back and better than ever!
             </h2>
-            <a routerLink="/basic-deck"><button class="button is-link">Make a flashcard deck</button></a>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" routerLink="/basic-deck">Make a flashcard deck</button>
+                </div>
+                <div class="control">
+                    <button *ngIf="decks.length" class="button is-link is-light" routerLink="/dashboard">View
+                        Dashboard</button>
+                </div>
+            </div>
         </div>
     </div>
 </section>

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FlashcardDeck } from '../model/flashcard-deck';
+import { FlashcardDeckService } from '../flashcard-deck.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LandingPageComponent implements OnInit {
 
-  constructor() { }
+  decks: FlashcardDeck[];
+
+  constructor(private deckserv: FlashcardDeckService) { }
 
   ngOnInit(): void {
+    this.deckserv.currentDecks.subscribe(decks => this.decks = decks);
   }
 
 }
