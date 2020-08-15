@@ -33,4 +33,26 @@ export class FlashcardDeckService {
   changeActiveDeck(deck: FlashcardDeck) {
     this.activeDeckSource.next(deck);
   }
+
+  removeDeck(deck: FlashcardDeck): void {
+    let decks: FlashcardDeck[] = this.deckSource.value;
+    console.log(decks);
+    let deckIndex: number;
+    for (let d = 0; d < decks.length; d++) {
+      if (decks[d].deckId == deck.deckId) {
+        deckIndex = d;
+      }
+    }
+    console.log(deckIndex);
+    if (deckIndex > -1) {
+      decks.splice(deckIndex, 1);
+      console.log(decks);
+      this.changeDecks(decks);
+      if (deck.deckId = this.activeDeckSource.value.deckId) {
+        this.changeActiveDeck(new FlashcardDeck("", "", "", "", null));
+      }
+    }
+  }
+
+
 }

@@ -34,6 +34,8 @@ export class DeckSlipComponent implements OnInit {
   }
 
   deleteDeck() {
+    console.log("Delete deck.")
+    this.deckserv.removeDeck(this.deck);
   }
 
 }

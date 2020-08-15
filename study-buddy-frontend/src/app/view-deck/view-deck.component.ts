@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FlashcardDeck } from '../model/flashcard-deck';
 import { FlashcardDeckService } from '../flashcard-deck.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-deck',
@@ -12,10 +13,12 @@ export class ViewDeckComponent implements OnInit {
   deck: FlashcardDeck;
   currentCardIndex: number;
   showQuestion: boolean;
+  refresh: boolean;
 
-  constructor(private deckserv: FlashcardDeckService) {
+  constructor(private deckserv: FlashcardDeckService, private router: Router) {
     this.currentCardIndex = 0;
     this.showQuestion = true;
+    this.refresh = false;
   }
 
   ngOnInit(): void {
@@ -38,6 +41,17 @@ export class ViewDeckComponent implements OnInit {
 
   flipCard(): void {
     this.showQuestion = !this.showQuestion;
+  }
+
+  refreshDeck(): void {
+    this.refresh = !this.refresh;
+    this.deck.populateCards(true);
+    this.refresh = !this.refresh;
+  }
+
+  deleteDeck(): void {
+    this.deckserv.removeDeck(this.deck);
+    this.router.navigateByUrl("/dashboard");
   }
 
 }
