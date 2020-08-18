@@ -51,11 +51,11 @@ export class MakeBasicDeckComponent implements OnInit {
     }
     let temp = this.spreadsheetUrl.split("docs.google.com/spreadsheets/d/");
     this.spreadsheetId = temp[temp.length - 1].split("\/")[0];
-    console.log(this.spreadsheetId);
+    // console.log(this.spreadsheetId);
 
     this.gserv.getAllSheetInfo(this.spreadsheetId).subscribe(
       response => {
-        console.log(response);
+        // console.log(response);
         // Google Sheets will not let worksheets in the same spreadsheet share the same name.
         // let titles = {};
         // for (let sheet of response.result.sheets) {
@@ -82,7 +82,7 @@ export class MakeBasicDeckComponent implements OnInit {
                   }
                 }
                 this.decks.push(deck);
-                console.log(this.decks);
+                // console.log(this.decks);
               }
             ).catch(err => {
               this.errorCode = err.result.error.code;

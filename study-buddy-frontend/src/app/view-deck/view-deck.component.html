@@ -14,18 +14,24 @@
                     </span>
                 </button>
 
-                <div class="card" style="width: 80%">
-                    <!--; background-color: red;">-->
-                    <a (click)="flipCard()">
-                        <div class="card-content">
-                            <p class="title" *ngIf="deck.cards.length && showQuestion">
-                                {{deck.cards[currentCardIndex]["question"]}}
-                            </p>
-                            <p class="subtitle" *ngIf="deck.cards.length && !showQuestion">
-                                {{deck.cards[currentCardIndex]["answer"]}}
-                            </p>
-                        </div>
-                    </a>
+                <div style="width: 100%">
+                    <div class="card">
+                        <!--; background-color: red;">-->
+                        <a (click)="flipCard()">
+                            <div class="card-content">
+                                <p class="title" *ngIf="deck.cards.length && showQuestion">
+                                    {{deck.cards[cardOrder[currentCardIndex]]["question"]}}
+                                </p>
+                                <p class="subtitle" *ngIf="deck.cards.length && !showQuestion">
+                                    {{deck.cards[cardOrder[currentCardIndex]]["answer"]}}
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                    <br>
+                    <p style="text-align: center">
+                        {{this.deck.cards.length ? this.currentCardIndex+1 : 0}}/{{this.deck.cards.length}}
+                    </p>
                 </div>
 
                 <button class="button is-light is-large" (click)="nextCard()">
@@ -41,12 +47,26 @@
     </div>
 
     <div class="columns is-centered">
-        <div class="column is-one-quarter">
-            <p style="text-align: center">
-                {{this.deck.cards.length ? this.currentCardIndex+1 : 0}}/{{this.deck.cards.length}}
-            </p>
+        <div class="column is-half buttons">
+            <button class="button is-warning" (click)="shuffleCards()" style="width: 19.3%">
+                <p><i class="fa fa-random"></i> Shuffle</p>
+            </button>
+            <button class="button is-success" (click)="unshuffleCards()" style="width: 19.3%">
+                <p><i class="fas fa-sort-amount-down-alt"></i> Order</p>
+            </button>
+            <button class="button is-success is-light" (click)="reverseCards()" style="width: 19.3%">
+                <p><i class="fas fa-backward"></i> Reverse</p>
+            </button>
+            <button *ngIf="!refresh" class="button is-link" (click)="refreshDeck()" style="width: 19.3%">
+                <p><i class="fas fa-sync-alt"></i> Refresh</p>
+            </button>
+            <progress *ngIf="refresh" class="progress is-info">30%</progress>
+            <button class="button is-danger" (click)="deleteDeck()" style="width: 19.3%">
+                <p><i class="fas fa-trash"></i> Delete</p>
+            </button>
         </div>
     </div>
+
 
     <div class="field is-grouped">
         <div class="control">
@@ -54,20 +74,6 @@
         </div>
         <div class="control">
             <button class="button is-primary is-light" routerLink="/home">Home</button>
-        </div>
-    </div>
-
-    <div class="field is-grouped">
-        <div class="control">
-            <button *ngIf="!refresh" class="button is-link" (click)="refreshDeck()">
-                <i class="fas fa-sync-alt"></i>
-            </button>
-            <progress *ngIf="refresh" class="progress is-info">30%</progress>
-        </div>
-        <div class="control">
-            <button class="button is-danger" (click)="deleteDeck()">
-                <i class="fas fa-trash"></i>
-            </button>
         </div>
     </div>
 

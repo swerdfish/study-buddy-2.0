@@ -44,8 +44,8 @@ export class RegistrationComponent implements OnInit, AfterViewInit {
     // this.userInfo = googleUser.getBasicProfile();
   }
 
-  onFailure(): void {
-
+  onFailure(error): void {
+    console.log(error);
   }
 
 }

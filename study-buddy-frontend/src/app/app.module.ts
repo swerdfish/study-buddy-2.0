@@ -18,6 +18,7 @@ import { DeckDashboardComponent } from './deck-dashboard/deck-dashboard.componen
 import { DeckSlipComponent } from './deck-slip/deck-slip.component';
 import { ViewDeckComponent } from './view-deck/view-deck.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { RegistrationComponent } from './registration/registration.component';
     DeckDashboardComponent,
     DeckSlipComponent,
     ViewDeckComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    LoginComponent
   ],
   imports: [
     AppRoutingModule,

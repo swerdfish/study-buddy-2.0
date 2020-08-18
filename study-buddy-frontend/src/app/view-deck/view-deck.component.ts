@@ -14,6 +14,7 @@ export class ViewDeckComponent implements OnInit {
   currentCardIndex: number;
   showQuestion: boolean;
   refresh: boolean;
+  cardOrder: number[];
 
   constructor(private deckserv: FlashcardDeckService, private router: Router) {
     this.currentCardIndex = 0;
@@ -22,7 +23,22 @@ export class ViewDeckComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.deckserv.currentActiveDeck.subscribe(deck => this.deck = deck);
+    this.deckserv.currentActiveDeck.subscribe(deck => {
+      this.deck = deck;
+      // Populate cards if not already populated
+      if (deck.cards.length == 0) this.deck.populateCards(true);
+      // Start cardOrder in sequential order
+      this.cardOrder = [...Array(this.deck.cards.length).keys()];
+    });
+  }
+
+  deleteDeck(): void {
+    this.deckserv.removeDeck(this.deck);
+    this.router.navigateByUrl("/dashboard");
+  }
+
+  flipCard(): void {
+    this.showQuestion = !this.showQuestion;
   }
 
   nextCard(): void {
@@ -39,10 +55,6 @@ export class ViewDeckComponent implements OnInit {
     this.showQuestion = true;
   }
 
-  flipCard(): void {
-    this.showQuestion = !this.showQuestion;
-  }
-
   refreshDeck(): void {
     this.refresh = !this.refresh;
     this.deck.populateCards(true);
@@ -52,9 +64,25 @@ export class ViewDeckComponent implements OnInit {
     this.refresh = !this.refresh;
   }
 
-  deleteDeck(): void {
-    this.deckserv.removeDeck(this.deck);
-    this.router.navigateByUrl("/dashboard");
+  reverseCards(): void {
+    this.cardOrder.reverse();
+  }
+
+  shuffle(arr: Array<any>): void {
+    for (let i = arr.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      let temp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = temp;
+    }
+  }
+
+  shuffleCards(): void {
+    this.shuffle(this.cardOrder);
+  }
+
+  unshuffleCards(): void {
+    this.cardOrder = [...Array(this.deck.cards.length).keys()];
   }
 
 }
