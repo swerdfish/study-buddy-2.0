@@ -2,7 +2,7 @@
 
     <div *ngIf="decks.length else noDecks">
         <h1 class="title">My Flashcard Decks</h1>
-        <div class="columns">
+        <div class="columns is-multiline">
             <div class="column">
                 <div *ngFor="let deck of decks; let i = index">
                     <app-deck-slip *ngIf="i % 4 == 0" [deck]=deck></app-deck-slip>

@@ -46,6 +46,9 @@ export class ViewDeckComponent implements OnInit {
   refreshDeck(): void {
     this.refresh = !this.refresh;
     this.deck.populateCards(true);
+    if (this.currentCardIndex == this.deck.cards.length - 1) {
+      this.currentCardIndex = 0;
+    }
     this.refresh = !this.refresh;
   }
 

@@ -5,7 +5,8 @@
     <div class="field">
         <label class="label">Spreadsheet URL</label>
         <input class="input" type="text" required [(ngModel)]=spreadsheetUrl id="ssurl" name="ssurl" #ssurl="ngModel"
-            pattern=".*docs.google.com\/spreadsheets\/d\/[a-zA-Z0-9-_]+\/.*">
+            pattern=".*docs.google.com\/spreadsheets\/d\/[a-zA-Z0-9-_]+\/.*"
+            [className]="ssurl.invalid && (ssurl.dirty || ssurl.touched) ? 'input is-danger' : 'input'">
         <div *ngIf="ssurl.invalid && (ssurl.dirty || ssurl.touched)">
             <p *ngIf="ssurl.errors.required" class="help is-danger">
                 Missing google spreadsheet URL
@@ -21,15 +22,17 @@
             <div class="field">
                 <label class="label">Question Column</label>
                 <p class="control is-expanded">
-                    <input class="input" type="text" placeholder="Question Column" value="A" name="qcol" #qcol="ngModel"
-                        [(ngModel)]="queCol" required>
+                    <input type="text" placeholder="Question Column" value="A" name="qcol" #qcol="ngModel"
+                        [(ngModel)]="queCol" required pattern="^[A-Z]+$"
+                        [className]="qcol.invalid && (qcol.dirty || qcol.touched) ? 'input is-danger' : 'input'">
                 </p>
             </div>
             <div class="field">
                 <label class="label">Answer Column</label>
                 <p class="control is-expanded">
-                    <input class="input" type="text" placeholder="Answer Column" value="B" name="acol" #acol="ngModel"
-                        [(ngModel)]="ansCol" required>
+                    <input type="text" placeholder="Answer Column" value="B" name="acol" #acol="ngModel"
+                        [(ngModel)]="ansCol" required pattern="^[A-Z]+$"
+                        [className]="acol.invalid && (acol.dirty || acol.touched) ? 'input is-danger' : 'input'">
                 </p>
             </div>
         </div>
@@ -43,8 +46,8 @@
     </div>
     <div class="field" *ngIf="headerPresent">
         <label class="label">How many header rows?</label>
-        <input class="input" type="number" id="hrows" name="hrows" #hrows="ngModel" [(ngModel)]="headerRows" required
-            min=1>
+        <input type="number" id="hrows" name="hrows" #hrows="ngModel" [(ngModel)]="headerRows" required min=1
+            [className]="(hrows.invalid || headerRows <= 0 || headerRows%1!=0) && (hrows.dirty || hrows.touched) ? 'input is-danger' : 'input'">
     </div>
 
     <div class="field is-grouped">

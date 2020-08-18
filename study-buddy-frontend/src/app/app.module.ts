@@ -17,6 +17,7 @@ import { MakeBasicDeckComponent } from './make-basic-deck/make-basic-deck.compon
 import { DeckDashboardComponent } from './deck-dashboard/deck-dashboard.component';
 import { DeckSlipComponent } from './deck-slip/deck-slip.component';
 import { ViewDeckComponent } from './view-deck/view-deck.component';
+import { RegistrationComponent } from './registration/registration.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ViewDeckComponent } from './view-deck/view-deck.component';
     MakeBasicDeckComponent,
     DeckDashboardComponent,
     DeckSlipComponent,
-    ViewDeckComponent
+    ViewDeckComponent,
+    RegistrationComponent
   ],
   imports: [
     AppRoutingModule,
