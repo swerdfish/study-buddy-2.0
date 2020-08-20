@@ -79,10 +79,12 @@ export class ViewDeckComponent implements OnInit {
 
   shuffleCards(): void {
     this.shuffle(this.cardOrder);
+    this.showQuestion = true;
   }
 
   unshuffleCards(): void {
     this.cardOrder = [...Array(this.deck.cards.length).keys()];
+    this.showQuestion = true;
   }
 
 }

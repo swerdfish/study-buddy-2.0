@@ -79,6 +79,11 @@
         <p>{{errorMessage}}</p>
     </div>
 
+    <div *ngIf="errorCode==429" class="notification is-danger is-light">
+        <b>429 Too Many Requests</b>
+        <p>{{errorMessage}}</p>
+    </div>
+
     <div *ngIf="errorCode < 0" class="notification is-danger is-light">
         <b>Improper Columns</b>
         <p>{{errorMessage}}</p>
@@ -109,6 +114,7 @@
                 </tbody>
             </table>
         </div>
+        <br>
     </div>
 
     <div class="control">

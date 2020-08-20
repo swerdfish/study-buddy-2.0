@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-import { TestSheetComponent } from './gapi/test-sheet/test-sheet.component';
 import { MakeBasicDeckComponent } from './make-basic-deck/make-basic-deck.component';
 import { DeckDashboardComponent } from './deck-dashboard/deck-dashboard.component';
 import { ViewDeckComponent } from './view-deck/view-deck.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
+import { ViewDeckGroupComponent } from './view-deck-group/view-deck-group.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -15,8 +15,8 @@ const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },
-  { path: 'test', component: TestSheetComponent },
-  { path: 'view', component: ViewDeckComponent }
+  { path: 'view', component: ViewDeckComponent },
+  { path: 'view-group', component: ViewDeckGroupComponent }
 ];
 
 @NgModule({

@@ -12,7 +12,7 @@ export class FlashcardDeck {
         if (deckId) {
             this.deckId = deckId;
         } else {
-            this.deckId = this.hashCode("") + "" + new Date().getTime();
+            this.deckId = this.hashCode(title) + "" + new Date().getTime();
         }
         this.spreadsheetInfo = {
             spreadsheetId: spreadsheetId,

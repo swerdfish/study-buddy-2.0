@@ -35,6 +35,11 @@ export class MakeBasicDeckComponent implements OnInit {
     this.loading = false;
   }
 
+  createDecks() {
+    this.deckserv.addDecks(this.decks);
+    this.router.navigateByUrl('/dashboard');
+  }
+
   ngOnInit(): void {
   }
 
@@ -98,10 +103,5 @@ export class MakeBasicDeckComponent implements OnInit {
         this.loading = false;
       }
     );
-  }
-
-  createDecks() {
-    this.deckserv.addDecks(this.decks);
-    this.router.navigateByUrl('/dashboard');
   }
 }
