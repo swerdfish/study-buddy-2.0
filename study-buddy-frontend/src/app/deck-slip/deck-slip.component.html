@@ -6,7 +6,8 @@
                 <i *ngIf="checked" class="far fa-check-square fa-lg"></i>
             </span>
         </div>
-        <p class="title is-4">{{deck.title | abbvTitle}}</p>
+        <p *ngIf="screenSize > 876" class="title is-4">{{deck.title | abbvTitle}}</p>
+        <p *ngIf="screenSize <= 876" class="title is-4">{{deck.title}}</p>
         <p class="subtitle">{{deck.cards.length}} cards</p>
     </div>
     <footer [ngClass]="checked ? 'card-footer has-background-grey-lighter' : 'card-footer'">
