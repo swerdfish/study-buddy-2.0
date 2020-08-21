@@ -18,7 +18,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   login(googleUser?): void {
     console.log("login");
-    this.router.navigateByUrl("/dashboard");
+    let profile = googleUser.getBasicProfile();
+    console.log(profile.getGivenName());
+    console.log(profile.getFamilyName());
+    console.log(profile.getEmail());
   }
 
   ngOnInit(): void {
@@ -26,7 +29,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     console.log("ngAfterViewInit");
-    gapi.signin2.render('my-signin-2', {
+    gapi.signin2.render('my-signin2', {
       scope: 'profile email',
       width: 240,
       height: 50,
@@ -37,7 +40,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onFailure(error): void {
+  onFailure(error: any): void {
     console.log(error);
   }
 

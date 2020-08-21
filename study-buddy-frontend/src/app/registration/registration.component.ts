@@ -38,9 +38,15 @@ export class RegistrationComponent implements OnInit, AfterViewInit {
 
   register(googleUser?): void {
     if (googleUser) {
-      console.log(googleUser.getBasicProfile());
-      console.log(googleUser);
+      // let profile = googleUser.getBasicProfile();
+      // let nameArray = profile.getName().split(" ");
+      // this.firstName = profile.getGivenName();//nameArray[0];
+      // this.lastName = profile.getFamilyName();//nameArray[nameArray.length-1];
+      // this.email = profile.getEmail();
     }
+    // console.log("First Name: " + this.firstName);
+    // console.log("Last Name: " + this.lastName);
+    // console.log("Email: " + this.email);
     // this.userInfo = googleUser.getBasicProfile();
   }
 
