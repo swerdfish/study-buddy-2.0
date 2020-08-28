@@ -1,65 +1,71 @@
-<form class="section" #regForm="ngForm" (ngSubmit)="register()">
-
-    <h1 class="title">New User Registration</h1>
-
-    <div class="field">
-        <label class="label">Email</label>
-        <input type="email" required [(ngModel)]=email id="em" name="em" #em="ngModel"
-            pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-            [className]="em.invalid && (em.dirty || em.touched) ? 'input is-danger' : 'input'">
-        <div *ngIf="em.invalid && (em.dirty || em.touched)">
-            <p *ngIf="em.errors.required" class="help is-danger">
-                An email address is required
-            </p>
-            <p *ngIf="em.errors?.pattern" class="help is-danger">
-                Please enter a valid email address
-            </p>
-        </div>
+<div *ngIf="!isAuthed" class="section">
+    <div *ngIf="isLoading" class="section">
+        <progress class="progress is-primary">30%</progress>
     </div>
+    <form *ngIf="!isLoading" #regForm="ngForm" (ngSubmit)="register()">
 
-    <div class="field is-horizontal">
-        <div class="field-body">
-            <div class="field">
-                <label class="label">First Name</label>
-                <p class="control is-expanded">
-                    <input type="text" name="firstN" #firstN="ngModel" [(ngModel)]="firstName" required
-                        [className]="firstN.invalid && (firstN.dirty || firstN.touched) ? 'input is-danger' : 'input'">
+        <h1 class="title">New User Registration</h1>
+
+        <div class="field">
+            <label class="label">Email</label>
+            <input type="email" required [(ngModel)]=email id="em" name="em" #em="ngModel"
+                pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                [className]="em.invalid && (em.dirty || em.touched) ? 'input is-danger' : 'input'">
+            <div *ngIf="em.invalid && (em.dirty || em.touched)">
+                <p *ngIf="em.errors.required" class="help is-danger">
+                    An email address is required
                 </p>
-            </div>
-            <div class="field">
-                <label class="label">Last Name</label>
-                <p class="control is-expanded">
-                    <input class="input" type="text" name="lastN" #lastN="ngModel" [(ngModel)]="lastName" required
-                        [className]="lastN.invalid && (lastN.dirty || lastN.touched) ? 'input is-danger' : 'input'">
+                <p *ngIf="em.errors?.pattern" class="help is-danger">
+                    Please enter a valid email address
                 </p>
             </div>
         </div>
-    </div>
 
-    <div class="field is-horizontal">
-        <div class="field-body">
-            <div class="field">
-                <label class="label">Password</label>
-                <p class="control is-expanded">
-                    <input type="password" name="pword" #pword="ngModel" [(ngModel)]="password" required
-                        [className]="pword.invalid && (pword.dirty || pword.touched) ? 'input is-danger' : 'input'">
-                </p>
-            </div>
-            <div class="field">
-                <label class="label">Confirm Password</label>
-                <p class="control is-expanded">
-                    <input type="password" name="confPword" #confPword="ngModel" [(ngModel)]="confPassword" required
-                        [className]="confPword.invalid && (confPword.dirty || confPword.touched) ? 'input is-danger' : 'input'">
-                </p>
+        <div class="field is-horizontal">
+            <div class="field-body">
+                <div class="field">
+                    <label class="label">First Name</label>
+                    <p class="control is-expanded">
+                        <input type="text" name="firstN" #firstN="ngModel" [(ngModel)]="firstName" required
+                            [className]="firstN.invalid && (firstN.dirty || firstN.touched) ? 'input is-danger' : 'input'">
+                    </p>
+                </div>
+                <div class="field">
+                    <label class="label">Last Name</label>
+                    <p class="control is-expanded">
+                        <input class="input" type="text" name="lastN" #lastN="ngModel" [(ngModel)]="lastName" required
+                            [className]="lastN.invalid && (lastN.dirty || lastN.touched) ? 'input is-danger' : 'input'">
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
 
+        <div class="field is-horizontal">
+            <div class="field-body">
+                <div class="field">
+                    <label class="label">Password</label>
+                    <p class="control is-expanded">
+                        <input type="password" name="pword" #pword="ngModel" [(ngModel)]="password" required
+                            [className]="pword.invalid && (pword.dirty || pword.touched) ? 'input is-danger' : 'input'">
+                    </p>
+                </div>
+                <div class="field">
+                    <label class="label">Confirm Password</label>
+                    <p class="control is-expanded">
+                        <input type="password" name="confPword" #confPword="ngModel" [(ngModel)]="confPassword" required
+                            [className]="confPword.invalid && (confPword.dirty || confPword.touched) ? 'input is-danger' : 'input'">
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<div class="section">
+    <h1 *ngIf="isAuthed" class="title">Hello, {{user.firstName}} {{user.lastName}}</h1>
     <div class="field">
         <meta name="google-signin-client_id" [content]="clientId">
         <div id="my-signin2"></div>
     </div>
-
-    <div *ngIf=userInfo>{{userInfo}}</div>
-
-</form>
+</div>

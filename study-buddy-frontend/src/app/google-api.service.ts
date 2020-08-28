@@ -64,6 +64,10 @@ export class GoogleApiService {
     );
   }
 
+  getIdToken() {
+    //
+  }
+
   getValues(spreadsheetId: string, rangeA1: string): Observable<gapi.client.Response<gapi.client.sheets.ValueRange>> {
     return this.googleApi.pipe(
       flatMap(() => from(this.initGapiClient())),
@@ -71,15 +75,23 @@ export class GoogleApiService {
     )
   }
 
-  isGoogleUserSignedIn(): Observable<any> {
-    return from(gapi.auth2.init({
-      client_id: credKey.client_id,
-      scope: credKey.scopes.join(" ")
-    }).then(
-      () => gapi.auth2.getAuthInstance()
-    ).then(
-      googleAuth => googleAuth.isSignedIn.get()
-    ));
+  // isGoogleUserSignedIn(): Observable<any> {
+  getGoogleAuthInstance() {
+    return this.googleApi.pipe(
+      flatMap(() => from(gapi.auth2.init({
+        client_id: credKey.client_id,
+        scope: credKey.scopes.join(" ")
+      }))),
+      flatMap(() => from(gapi.auth2.getAuthInstance()))
+    );
+    // return from(gapi.auth2.init({
+    //   client_id: credKey.client_id,
+    //   scope: credKey.scopes.join(" ")
+    // }).then(
+    //   () => gapi.auth2.getAuthInstance()
+    // ).then(
+    //   googleAuth => googleAuth.isSignedIn.get()
+    // ));
   }
 
   async initGapiClient() {
