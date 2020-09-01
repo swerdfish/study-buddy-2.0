@@ -52,6 +52,7 @@ export class NavbarComponent implements OnInit {
           firstName: profile.getGivenName(),
           lastName: profile.getFamilyName()
         };
+        console.log(authInst.currentUser.get().getAuthResponse().id_token);
         this.store.dispatch(new GoogleLoginSuccess({ user: this.user }))
       }
       this.loading = false;

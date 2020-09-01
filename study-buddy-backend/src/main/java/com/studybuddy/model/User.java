@@ -8,14 +8,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
 public class User {
 	
 	@Id
 	@GeneratedValue
-	private String uid;
+	private int uid;
 	private String email;
 	private String firstName;
 	private String lastName;

@@ -7,7 +7,7 @@ public interface UserService {
 	// Create
 	public User createUser(User user);
 	// Read
-	public User findByUserId(String id);
+	public User findByUserId(int id);
 	public User findByEmail(String email);
 	// Update
 	public User updateUser(User user);

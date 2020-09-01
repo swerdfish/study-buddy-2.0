@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 	// READ
 	
 	@Override
-	public User findByUserId(String id) {
+	public User findByUserId(int id) {
 		return urepo.findById(id).get();
 	}
 
