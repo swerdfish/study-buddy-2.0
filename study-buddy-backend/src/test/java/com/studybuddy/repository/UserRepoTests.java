@@ -1,6 +1,6 @@
 package com.studybuddy.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -22,15 +22,16 @@ public class UserRepoTests {
 	private User user;
 	
 	public UserRepoTests() {
-		this.user = new User(0, "test@test.com", "Tessa", "Testerson");
+		this.user = User.createTestUser("0");
 	}
 	
 	@Test
 	public void testUserPojo() {
-		assertEquals(this.user.getUid(), 0);
-		assertEquals(this.user.getEmail(), "test@test.com");
-		assertEquals(this.user.getFirstName(), "Tessa");
-		assertEquals(this.user.getLastName(), "Testerson");
+		assertTrue(this.user.isTestUser("0"));
+//		assertEquals(this.user.getUid(), "0");
+//		assertEquals(this.user.getEmail(), "test@test.com");
+//		assertEquals(this.user.getFirstName(), "Tessa");
+//		assertEquals(this.user.getLastName(), "Testerson");
 	}
 	
 	@Test
@@ -40,7 +41,7 @@ public class UserRepoTests {
 	
 	@Test
 	public void testGetUserById() {
-		when(this.urepo.findById(0)).thenReturn(Optional.of(this.user));
+		when(this.urepo.findById("0")).thenReturn(Optional.of(this.user));
 	}
 	
 	@Test

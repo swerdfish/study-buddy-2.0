@@ -1,8 +1,6 @@
 package com.studybuddy.config;
 
 import java.util.Arrays;
-import java.util.Collections;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +33,7 @@ public class Filters {
 	public FilterRegistrationBean<FlashcardDeckFilter> fDeckRegistrationBean() {
 	    FilterRegistrationBean<FlashcardDeckFilter> filterRegistrationBean = new FilterRegistrationBean<FlashcardDeckFilter>();
 	    filterRegistrationBean.setFilter(this.fdFilt);
-	    filterRegistrationBean.setUrlPatterns(Collections.singletonList("/flashcardDeck/*"));
+	    filterRegistrationBean.setUrlPatterns(Arrays.asList("/flashcardDeck/*", "/flashcardDecks/*"));
     return filterRegistrationBean;
   }
 

@@ -13,9 +13,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().authorizeRequests()
 //		Probably unnecessary since this is just a REST API and we're not serving web pages
 //			.antMatchers("/css/**", "/js/**", "/images/**", "/static/**", "/**/favicon.ico").permitAll()
-			.antMatchers(HttpMethod.GET, "/ping").permitAll()
-			.antMatchers(HttpMethod.POST, "/login").permitAll()
-			.antMatchers(HttpMethod.POST, "/register").permitAll()
+			.antMatchers(HttpMethod.GET, "/ping", "/flashcardDeck/**", "/flashcardDecks/**").permitAll()
+			.antMatchers(HttpMethod.POST, "/login", "/register",
+					"/flashcardDeck/**", "/flashcardDecks/**").permitAll()
 			.antMatchers("/h2-console/**").permitAll()
 			.antMatchers("h2-console/login.do**").permitAll()
 			.antMatchers("/rest/**").permitAll()

@@ -12,7 +12,8 @@ import com.studybuddy.model.User;
 @Repository
 public interface FlashcardDeckRepo extends JpaRepository<FlashcardDeck, Integer> {
 	
-	public List<FlashcardDeck> findByUser(User user);
-	public List<FlashcardDeck> findBySpreadsheetInfo(SpreadsheetInfo ssInfo);
+	public List<FlashcardDeck> findByUser_Uid(String uid);
+	public List<FlashcardDeck> findBySpreadsheetInfo_SpreadsheetId(String spreadsheetId);
+	public List<FlashcardDeck> findBySpreadsheetInfoAndUser(SpreadsheetInfo ssInfo, User user);
 
 }

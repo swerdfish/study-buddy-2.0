@@ -15,7 +15,7 @@ import io.jsonwebtoken.SignatureException;
 public class AccessTokenProvider {
 
   private static final long EXPIRATION_TIME_MILLISECONDS = 86_400_000; // 1 day
-  private static final String SECRET = "ThisIsASecret";
+  private static final String SECRET = "ThisIsASecret_DO-NOT-USE-IN-PRODUCTION";
   private static final String TOKEN_PREFIX = "Bearer";
   private static final String HEADER_STRING = "Authorization";
 
@@ -35,7 +35,7 @@ public class AccessTokenProvider {
     return getNewPerishableToken(userId);
   }
 
-  public static Optional<String> getUserFromToken(HttpServletRequest request) {
+  public static Optional<String> getUserIdFromToken(HttpServletRequest request) {
     final String token = request.getHeader(HEADER_STRING);
 
     if (token != null) {

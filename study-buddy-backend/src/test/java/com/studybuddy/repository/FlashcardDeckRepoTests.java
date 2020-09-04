@@ -1,5 +1,6 @@
 package com.studybuddy.repository;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -28,26 +29,28 @@ public class FlashcardDeckRepoTests {
 	private SpreadsheetInfo ssInfo;
 	
 	public FlashcardDeckRepoTests() {
-		this.deckUser = new User(0, "test@test.com", "Tessa", "Testerson");
-		this.ssUser = new User(1, "owner@test.com", "Owen", "Ownerson");
+		this.deckUser = User.createTestUser("0");
+		this.ssUser = User.createTestUser("1");
 		this.ssInfo = new SpreadsheetInfo("-", this.ssUser, "A", "B", 1, true);
 		this.fd = new FlashcardDeck(0, this.deckUser, this.ssInfo, "#FFFFFF", "Test Deck");
 	}
 	
 	@Test
 	public void testDeckUserPojo() {
-		assertEquals(0, this.deckUser.getUid());
-		assertEquals("test@test.com", this.deckUser.getEmail());
-		assertEquals("Tessa", this.deckUser.getFirstName());
-		assertEquals("Testerson", this.deckUser.getLastName());
+		assertTrue(this.deckUser.isTestUser("0"));
+//		assertEquals("0", this.deckUser.getUid());
+//		assertEquals("test@test.com", this.deckUser.getEmail());
+//		assertEquals("Tessa", this.deckUser.getFirstName());
+//		assertEquals("Testerson", this.deckUser.getLastName());
 	}
 	
 	@Test
 	public void testSsUserPojo() {
-		assertEquals(1, this.ssUser.getUid());
-		assertEquals("owner@test.com", this.ssUser.getEmail());
-		assertEquals("Owen", this.ssUser.getFirstName());
-		assertEquals("Ownerson", this.ssUser.getLastName());
+		assertTrue(this.ssUser.isTestUser("1"));
+//		assertEquals("1", this.ssUser.getUid());
+//		assertEquals("owner@test.com", this.ssUser.getEmail());
+//		assertEquals("Owen", this.ssUser.getFirstName());
+//		assertEquals("Ownerson", this.ssUser.getLastName());
 	}
 	
 	@Test
@@ -64,7 +67,7 @@ public class FlashcardDeckRepoTests {
 	public void testFlashcardDeckPojo() {
 		assertEquals(0, this.fd.getFdid());
 		assertEquals(this.deckUser, this.fd.getUser());
-		assertEquals(this.ssInfo, this.fd.getSsInfo());
+		assertEquals(this.ssInfo, this.fd.getSpreadsheetInfo());
 		assertEquals("#FFFFFF", this.fd.getColor());
 		assertEquals("Test Deck", this.fd.getTitle());
 	}
@@ -82,14 +85,21 @@ public class FlashcardDeckRepoTests {
 	}
 	
 	@Test
-	public void testGetFlashcardDeckByUser() {
-		when(this.fdr.findByUser(this.deckUser))
+	public void testGetFlashcardDeckByUserId() {
+		when(this.fdr.findByUser_Uid(this.deckUser.getUid()))
 			.thenReturn(Collections.singletonList(this.fd));
 	}
 	
 	@Test
-	public void testGetFlashcardDeckBySpreadsheetInfo() {
-		when(this.fdr.findBySpreadsheetInfo(this.ssInfo))
+	public void testGetFlashcardDeckBySpreadsheetId() {
+		when(this.fdr.findBySpreadsheetInfo_SpreadsheetId(this.ssInfo.getSpreadsheetId()))
+			.thenReturn(Collections.singletonList(this.fd));
+	}
+	
+	@Test
+	public void testGetFlashcardDeckBySpreadsheetIdOwnedByUserId() {
+		when(this.fdr.findBySpreadsheetInfoAndUser(
+				this.ssInfo, this.deckUser))
 			.thenReturn(Collections.singletonList(this.fd));
 	}
 

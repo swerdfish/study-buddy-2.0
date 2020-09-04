@@ -49,15 +49,16 @@ public class UserFilter implements Filter {
 	      try {
 	        payload = googleTokenVerifier.verify(idToken);
 	        if (payload != null) {
-	          String username = payload.getSubject();
-	          User u = new User(0, payload.getEmail(),
-	        		  (String) payload.get("given_name"),
-	        		  (String) payload.get("family_name"));
-	          System.out.println(u);
-	          servletRequest.setAttribute("user", u);
-	          AccessTokenProvider.addAuthentication(response, username);
-	          filterChain.doFilter(servletRequest, response);
-	          return;
+	        	String userId = payload.getSubject();
+	        	System.out.println(userId);
+	        	User u = new User(userId, payload.getEmail(),
+	        			(String) payload.get("given_name"),
+	        			(String) payload.get("family_name"));
+	        	System.out.println(u);
+	        	servletRequest.setAttribute("user", u);
+	        	AccessTokenProvider.addAuthentication(response, userId);
+	        	filterChain.doFilter(servletRequest, response);
+	        	return;
 	        }
 	      } catch (GeneralSecurityException | InvalidTokenException e) {
 	        // This is not a valid token, we will send HTTP 401 back

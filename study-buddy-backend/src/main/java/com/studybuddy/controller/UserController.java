@@ -21,20 +21,16 @@ public class UserController {
 	@Autowired
 	public UserController(UserService userServ) {
 		this.userServ = userServ;
-		System.out.println("test");
 	}
 	
 	@GetMapping("/ping")
 	public String ping() {
-		System.out.println("pingpong");
 		return "pong";
 	}
 	
 	@PostMapping("/register")
 	public User registerUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		User u = (User) request.getAttribute("user");
-		System.out.println("=========Register=========");
-		System.out.println(u);
 		if (userServ.findByEmail(u.getEmail())!=null) {
 			response.sendError(417, "User "+u.getEmail()+" already has an account. Please login instead.");
 			return null;
@@ -45,8 +41,6 @@ public class UserController {
 	@PostMapping("/login")
 	public User loginUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		User u = (User) request.getAttribute("user");
-		System.out.println("==========Login==========");
-		System.out.println(u);
 		if (userServ.findByEmail(u.getEmail())==null) {
 			response.sendError(401, "User "+u.getEmail()+" does not have an account. Please register instead.");
 			return null;

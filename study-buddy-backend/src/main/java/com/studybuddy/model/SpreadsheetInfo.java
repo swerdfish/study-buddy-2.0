@@ -2,11 +2,8 @@ package com.studybuddy.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -22,8 +19,7 @@ public class SpreadsheetInfo {
 	@Id
 	private String spreadsheetId;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonBackReference
+	@ManyToOne
 	private User user;
 	
 	@Column(name = "question_column")

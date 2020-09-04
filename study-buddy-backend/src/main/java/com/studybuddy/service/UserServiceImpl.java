@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
 	// READ
 	
 	@Override
-	public User findByUserId(int id) {
-		return urepo.findById(id).get();
+	public User findByUserId(String uid) {
+		return urepo.findById(uid).get();
 	}
 
 	@Override
@@ -47,6 +47,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteUser(User user) {
 		urepo.delete(user);
+	}
+	
+	// EXISTS
+	
+	@Override
+	public boolean existsUserByUid(String uid) {
+		return urepo.findById(uid).isPresent();
 	}
 
 }
