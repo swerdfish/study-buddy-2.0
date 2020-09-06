@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.studybuddy.exception.AuthorizationFailedException;
+import com.studybuddy.exception.AuthenticationFailedException;
 import com.studybuddy.filter.FlashcardDeckFilter;
 import com.studybuddy.filter.UserFilter;
 import com.studybuddy.model.User;
@@ -70,7 +70,7 @@ public class UserControllerTests {
 				.contentType("application/json"))
 			.andExpect(status().isNotFound())
 			.andExpect(result -> assertTrue(
-					result.getResolvedException() instanceof AuthorizationFailedException))
+					result.getResolvedException() instanceof AuthenticationFailedException))
 			.andExpect(result -> assertEquals(
 					"Failed to transfer user information from Google",
 					result.getResolvedException().getMessage()));
@@ -87,12 +87,13 @@ public class UserControllerTests {
 	
 	@Test
 	public void loginWithoutGoogleIdToken_throwsAuthenticationFailedException() throws Exception {
-		this.mockMvc.perform(post("/login")
+		this.mockMvc.perform(
+				post("/login")
 				.contentType("applications/json")
 				.requestAttr("user", this.user))
 		.andExpect(status().isUnauthorized())
 		.andExpect(result -> assertTrue(
-				result.getResolvedException() instanceof AuthorizationFailedException))
+				result.getResolvedException() instanceof AuthenticationFailedException))
 		.andExpect(result -> assertEquals(
 				"No id token found",
 				result.getResolvedException().getMessage()));
