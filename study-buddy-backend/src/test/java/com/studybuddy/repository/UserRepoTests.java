@@ -27,7 +27,7 @@ public class UserRepoTests {
 	
 	@Test
 	public void testUserPojo() {
-		assertTrue(this.user.isTestUser("0"));
+		assertTrue(this.user.checkIsTestUser("0"));
 //		assertEquals(this.user.getUid(), "0");
 //		assertEquals(this.user.getEmail(), "test@test.com");
 //		assertEquals(this.user.getFirstName(), "Tessa");

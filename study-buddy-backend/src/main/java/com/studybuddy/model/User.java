@@ -34,11 +34,11 @@ public class User {
 		}
 	}
 	
-	public boolean isTestUser() {
+	public boolean checkIsTestUser() {
 		return this.equals(createTestUser("0")) || this.equals(createTestUser("1"));
 	}
 	
-	public boolean isTestUser(String uid) {
+	public boolean checkIsTestUser(String uid) {
 		return uid.equals("0") || uid.equals("1") ? 
 				this.equals(createTestUser(uid)) 
 				: false;

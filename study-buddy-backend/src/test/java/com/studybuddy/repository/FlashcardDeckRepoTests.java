@@ -37,7 +37,7 @@ public class FlashcardDeckRepoTests {
 	
 	@Test
 	public void testDeckUserPojo() {
-		assertTrue(this.deckUser.isTestUser("0"));
+		assertTrue(this.deckUser.checkIsTestUser("0"));
 //		assertEquals("0", this.deckUser.getUid());
 //		assertEquals("test@test.com", this.deckUser.getEmail());
 //		assertEquals("Tessa", this.deckUser.getFirstName());
@@ -46,7 +46,7 @@ public class FlashcardDeckRepoTests {
 	
 	@Test
 	public void testSsUserPojo() {
-		assertTrue(this.ssUser.isTestUser("1"));
+		assertTrue(this.ssUser.checkIsTestUser("1"));
 //		assertEquals("1", this.ssUser.getUid());
 //		assertEquals("owner@test.com", this.ssUser.getEmail());
 //		assertEquals("Owen", this.ssUser.getFirstName());

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.studybuddy.exception.AuthenticationFailedException;
 import com.studybuddy.exception.InvalidTokenException;
 import com.studybuddy.model.User;
 import com.studybuddy.provider.AccessTokenProvider;
@@ -62,11 +63,11 @@ public class UserFilter implements Filter {
 	        }
 	      } catch (GeneralSecurityException | InvalidTokenException e) {
 	        // This is not a valid token, we will send HTTP 401 back
-	    	  response.sendError(401, e.getMessage());
+	    	  throw new AuthenticationFailedException(e.getMessage());
 	      }
 	    } else {
 //	    ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED);
-	    	response.sendError(401, "No id token found.");
+	    	throw new AuthenticationFailedException("No id token found");
 	    }
 	}
 

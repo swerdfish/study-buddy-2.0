@@ -34,7 +34,7 @@ public class SpreadsheetInfoRepoTests {
 	
 	@Test
 	public void testUserPojo() {
-		assertTrue(this.user.isTestUser("0"));
+		assertTrue(this.user.checkIsTestUser("0"));
 	}
 	
 	@Test

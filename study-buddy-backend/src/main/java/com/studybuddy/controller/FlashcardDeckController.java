@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.studybuddy.exception.InvalidPermissionsException;
 import com.studybuddy.model.FlashcardDeck;
 import com.studybuddy.service.FlashcardDeckService;
 import com.studybuddy.service.SpreadsheetInfoService;
@@ -52,8 +53,8 @@ public class FlashcardDeckController {
 			return null;
 		}
 		if (!fDeck.getUser().getUid().equals((String) request.getAttribute("userId"))) {
-			response.sendError(403, "Logged in user cannot access flashcard deck "+fid);
-			return null;
+			throw new InvalidPermissionsException(
+					"Logged in user cannot access flashcard deck "+fid);
 		}
 		return fDeck;
 	}
