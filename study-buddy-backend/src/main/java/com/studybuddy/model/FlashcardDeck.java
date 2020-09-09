@@ -34,4 +34,13 @@ public class FlashcardDeck {
 	
 	private String title;
 
+	public static FlashcardDeck createTestFlashcardDeck() {
+		return new FlashcardDeck(0, User.createTestUser("0"),
+				SpreadsheetInfo.createTestSpreadsheetInfo(),
+				"#FFFFFF", "Test Deck");
+	}
+	
+	public boolean checkIsTestFlashcardDeck() {
+		return this.equals(createTestFlashcardDeck());
+	}
 }

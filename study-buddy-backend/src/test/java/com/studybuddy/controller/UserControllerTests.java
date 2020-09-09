@@ -18,8 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.studybuddy.exception.AuthenticationFailedException;
-import com.studybuddy.filter.FlashcardDeckFilter;
-import com.studybuddy.filter.UserFilter;
+import com.studybuddy.exception.ResourceNotFoundException;
 import com.studybuddy.model.User;
 import com.studybuddy.service.UserService;
 import com.studybuddy.verifier.GoogleTokenVerifier;
@@ -34,8 +33,6 @@ public class UserControllerTests {
 	private UserService usrs;
 	@MockBean
 	private GoogleTokenVerifier gtf;
-//	@MockBean
-//	private UserFilter ufilt;
 	
 	@Autowired
 	public UserControllerTests(WebApplicationContext context) {
@@ -46,7 +43,7 @@ public class UserControllerTests {
 	}
 	
 	@Test
-	public void pingShouldReturnPongTest() throws Exception {
+	public void ping_returnsPong() throws Exception {
 		this.mockMvc.perform(
 				get("/ping"))
 			.andDo(print())
@@ -55,38 +52,29 @@ public class UserControllerTests {
 	}
 	
 	@Test
-	public void registerWithUserInRequest_returnsOk200() throws Exception {
+	public void registerWithUserInRequest_returnsCreated201() throws Exception {
 		this.mockMvc.perform(
 				post("/register")
 				.contentType("application/json")
 				.requestAttr("user", this.user))
-			.andExpect(status().isOk());
+			.andExpect(status().isCreated());
 	}
 	
 	@Test
-	public void registerWithoutUserInRequest_throwsAuthorizationFailedException() throws Exception {
+	public void registerWithoutUserInRequest_throwsAutenticationFailedException() throws Exception {
 		this.mockMvc.perform(
 				post("/register")
 				.contentType("application/json"))
 			.andExpect(status().isNotFound())
 			.andExpect(result -> assertTrue(
-					result.getResolvedException() instanceof AuthenticationFailedException))
+					result.getResolvedException() instanceof ResourceNotFoundException))
 			.andExpect(result -> assertEquals(
 					"Failed to transfer user information from Google",
 					result.getResolvedException().getMessage()));
 	}
 	
 	@Test
-	public void loginWithUserInRequest_returnsOk200() throws Exception {
-		this.mockMvc.perform(
-				post("/login")
-				.contentType("applications/json")
-				.requestAttr("user", this.user))
-		.andExpect(status().isOk());
-	}
-	
-	@Test
-	public void loginWithoutGoogleIdToken_throwsAuthenticationFailedException() throws Exception {
+	public void loginWithNonExistentUserInRequest_throwsAuthenticationFailedException() throws Exception {
 		this.mockMvc.perform(
 				post("/login")
 				.contentType("applications/json")
@@ -95,20 +83,21 @@ public class UserControllerTests {
 		.andExpect(result -> assertTrue(
 				result.getResolvedException() instanceof AuthenticationFailedException))
 		.andExpect(result -> assertEquals(
-				"No id token found",
+				"User "+this.user.getEmail()+" does not have an account. Please register instead.",
 				result.getResolvedException().getMessage()));
 	}
 	
 	@Test
-	public void loginWithoutUserInRequest_throwsAuthorizationFailedException() throws Exception {
-		this.mockMvc.perform(post("/login")
+	public void loginWithNonExistentUserInRequest_throwsAuthorizationFailedException() throws Exception {
+		this.mockMvc.perform(
+				post("/login")
 				.contentType("applications/json")
 				.requestAttr("user", this.user))
-		.andExpect(status().isNotFound())
+		.andExpect(status().isUnauthorized())
 		.andExpect(result -> assertTrue(
-				result.getResolvedException() instanceof AuthorizationFailedException))
+				result.getResolvedException() instanceof AuthenticationFailedException))
 		.andExpect(result -> assertEquals(
-				"User "+this.user.getEmail()+" already has an account. Please login instead.",
+				"User "+this.user.getEmail()+" does not have an account. Please register instead.",
 				result.getResolvedException().getMessage()));
 	}
 

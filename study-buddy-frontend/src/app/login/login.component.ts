@@ -44,6 +44,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
         self.firstName = profile.getGivenName();
         self.lastName = profile.getFamilyName();
         self.email = profile.getEmail();
+        this.router.navigateByUrl('/navbar').then(() => {
+          this.router.navigateByUrl('/home');
+        });
       },
       onfailure: this.onFailure
     });

@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './store';
@@ -29,6 +29,7 @@ import { environment } from '../environments/environment';
 import { AuthEffects } from './store/effects/auth.effects';
 import { FlashcardDeckService } from './flashcard-deck.service';
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { UserService } from './user.service';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     BrowserAnimationsModule,
     FlexLayoutModule,
     FormsModule,
+    HttpClientModule,
     StoreModule.forRoot(reducers),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     EffectsModule.forRoot([
@@ -59,11 +61,12 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
   providers: [
     GoogleApiService,
     FlashcardDeckService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true
-    }
+    UserService
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: TokenInterceptor,
+    //   multi: true
+    // }
   ],
   bootstrap: [AppComponent]
 })

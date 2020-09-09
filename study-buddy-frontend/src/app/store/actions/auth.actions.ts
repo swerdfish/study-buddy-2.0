@@ -3,6 +3,7 @@ import { User } from 'src/app/model/user.model';
 
 export enum AuthActionTypes {
   AUTH_ERROR = '[Auth] Authorization Error',
+  GOOGLE_LOGIN = '[Auth] Google Login',
   GOOGLE_LOGIN_FAILURE = '[Auth] Google Login Failure',
   GOOGLE_LOGIN_SUCCESS = '[Auth] Google Login Success',
   GOOGLE_LOGOUT = '[Auth] Google Logout',
@@ -13,6 +14,11 @@ export class AuthError implements Action {
   constructor(public payload: any) { }
 }
 
+export class GoogleLogin implements Action {
+  readonly type = AuthActionTypes.GOOGLE_LOGIN;
+  constructor(public payload: any) { }
+}
+
 export class GoogleLoginFailure implements Action {
   readonly type = AuthActionTypes.GOOGLE_LOGIN_FAILURE;
   constructor(public payload: any) { }
@@ -20,7 +26,10 @@ export class GoogleLoginFailure implements Action {
 
 export class GoogleLoginSuccess implements Action {
   readonly type = AuthActionTypes.GOOGLE_LOGIN_SUCCESS;
-  constructor(public payload: { user: User }) { }
+  constructor(public payload: {
+    user: User,
+    token: string
+  }) { }
 }
 
 export class GoogleLogout implements Action {
@@ -30,6 +39,6 @@ export class GoogleLogout implements Action {
 
 export type AuthActions =
   | AuthError
-  | GoogleLoginFailure | GoogleLoginSuccess
+  | GoogleLogin | GoogleLoginFailure | GoogleLoginSuccess
   | GoogleLogout;
 

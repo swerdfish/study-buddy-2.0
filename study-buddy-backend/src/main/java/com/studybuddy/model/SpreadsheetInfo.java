@@ -32,4 +32,11 @@ public class SpreadsheetInfo {
 	
 	private boolean publicAccess;
 
+	public static SpreadsheetInfo createTestSpreadsheetInfo() {
+		return new SpreadsheetInfo("-", User.createTestUser("1"), "A", "B", 1, true);
+	}
+	
+	public boolean checkIsTestSpreadsheetInfo() {
+		return this.equals(createTestSpreadsheetInfo());
+	}
 }

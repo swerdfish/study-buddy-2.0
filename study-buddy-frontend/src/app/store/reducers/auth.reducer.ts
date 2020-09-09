@@ -6,14 +6,16 @@ export const authFeatureKey = 'auth';
 
 export interface AuthState {
   user: User;
-  isGoogleAuthed: boolean;
+  token: string;
+  isLoggedIn: boolean;
   loading: boolean;
   error: string;
 }
 
 export const initialAuthState: AuthState = {
   user: new User(),
-  isGoogleAuthed: false,
+  token: null,
+  isLoggedIn: false,
   loading: false,
   error: null
 };
@@ -23,7 +25,7 @@ export function authReducer(state = initialAuthState, action: AuthActions): Auth
     case AuthActionTypes.GOOGLE_LOGIN_FAILURE: {
       return {
         ...state,
-        isGoogleAuthed: false,
+        isLoggedIn: false,
         loading: false,
         error: "Failed to authenticate with google"
       }
@@ -32,7 +34,8 @@ export function authReducer(state = initialAuthState, action: AuthActions): Auth
       return {
         ...state,
         ...action.payload,
-        isGoogleAuthed: true,
+        loading: false,
+        isLoggedIn: true,
       }
     }
     default:
