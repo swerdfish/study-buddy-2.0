@@ -59,14 +59,14 @@ export class RegistrationComponent implements OnInit, AfterViewInit {
             let profile = googleUser.getBasicProfile();
             if (!self.isAuthed) {
               console.log(self.isAuthed);
-              self.store.dispatch(new GoogleLoginSuccess({
-                user: {
-                  uid: "",
-                  firstName: profile.getGivenName(),
-                  lastName: profile.getFamilyName(),
-                  email: profile.getEmail()
-                }
-              }));
+              // self.store.dispatch(new GoogleLoginSuccess({
+              //   user: {
+              //     uid: "",
+              //     firstName: profile.getGivenName(),
+              //     lastName: profile.getFamilyName(),
+              //     email: profile.getEmail()
+              //   }
+              // }));
             }
             self.isLoading = false;
             self.chDet.detectChanges();

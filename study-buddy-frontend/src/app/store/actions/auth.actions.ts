@@ -7,6 +7,7 @@ export enum AuthActionTypes {
   GOOGLE_LOGIN_FAILURE = '[Auth] Google Login Failure',
   GOOGLE_LOGIN_SUCCESS = '[Auth] Google Login Success',
   GOOGLE_LOGOUT = '[Auth] Google Logout',
+  GOOGLE_REGISTER = '[Auth] Google Register'
 }
 
 export class AuthError implements Action {
@@ -37,8 +38,14 @@ export class GoogleLogout implements Action {
   constructor(public payload: any) { }
 }
 
+export class GoogleRegister implements Action {
+  readonly type = AuthActionTypes.GOOGLE_REGISTER;
+  constructor(public payload: any) { }
+}
+
 export type AuthActions =
   | AuthError
   | GoogleLogin | GoogleLoginFailure | GoogleLoginSuccess
-  | GoogleLogout;
+  | GoogleLogout
+  | GoogleRegister;
 

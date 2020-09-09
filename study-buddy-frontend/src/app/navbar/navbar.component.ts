@@ -1,12 +1,11 @@
-import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
-import { GoogleApiService } from '../google-api.service';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { User } from '../model/user.model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { UserService } from '../user.service';
 import { selectAuthState } from '../store';
 import { AuthState } from '../store/reducers/auth.reducer';
 import * as credKey from '../../../../../sheets-cred-key_studyBuddy.json'
+import { GoogleLogin, GoogleRegister, GoogleLogout } from '../store/actions/auth.actions';
 
 @Component({
   selector: 'app-navbar',
@@ -43,10 +42,7 @@ export class NavbarComponent implements OnInit {
   }
 
   constructor(
-    private cdr: ChangeDetectorRef,
-    private gserv: GoogleApiService,
-    private store: Store,
-    private userv: UserService) {
+    private store: Store) {
     this.open = false;
     this.openCloseBurgerUsed = false;
     this.getState = this.store.select(selectAuthState);
@@ -99,8 +95,9 @@ export class NavbarComponent implements OnInit {
     //   }
     // });
     this.getState.subscribe((state: AuthState) => {
-      this.isLoggedIn = !!(state.user);
+      this.isLoggedIn = Object.keys(state.user).length > 0;
       this.user = state.user;
+      this.loading = state.loading;
     })
   }
 
@@ -108,6 +105,18 @@ export class NavbarComponent implements OnInit {
     this.open = !this.open;
     // console.log("openCloseBurger open=" + this.open);
     this.openCloseBurgerUsed = true;
+  }
+
+  register() {
+    this.store.dispatch(new GoogleRegister(null));
+  }
+
+  login() {
+    this.store.dispatch(new GoogleLogin(null));
+  }
+
+  logout() {
+    this.store.dispatch(new GoogleLogout(null));
   }
 
 }

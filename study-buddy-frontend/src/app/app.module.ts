@@ -30,6 +30,7 @@ import { AuthEffects } from './store/effects/auth.effects';
 import { FlashcardDeckService } from './flashcard-deck.service';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { UserService } from './user.service';
+import { ErrorComponent } from './error/error.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { UserService } from './user.service';
     LoginComponent,
     ViewDeckGroupComponent,
     AbbvTitlePipe,
+    ErrorComponent,
   ],
   imports: [
     AppRoutingModule,

@@ -41,8 +41,10 @@ public class UserController {
 			throw new ResourceNotFoundException(
 					"Failed to transfer user information from Google");
 		if (userServ.findByEmail(u.getEmail())!=null) {
-			throw new ExistingUserRegistrationException(
-					"User "+u.getEmail()+" already has an account. Please login instead.");
+			// Let the user log in if they already exist
+			return u;
+//			throw new ExistingUserRegistrationException(
+//					"User "+u.getEmail()+" already has an account. Please login instead.");
 		}
 		response.setStatus(HttpStatus.CREATED.value());
 		return userServ.createUser(u);
