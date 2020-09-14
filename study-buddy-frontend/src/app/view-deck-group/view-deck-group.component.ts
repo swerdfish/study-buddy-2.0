@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CompositeDeck } from '../model/composite-deck.model';
-import { FlashcardDeckService } from '../flashcard-deck.service';
+import { FlashcardDeckServiceDeprecated } from '../flashcard-deck-deprecated.service';
 import { FlashcardDeck } from '../model/flashcard-deck';
 
 @Component({
@@ -16,7 +16,7 @@ export class ViewDeckGroupComponent implements OnInit {
   refresh: boolean;
   cardOrder: number[];
 
-  constructor(private deckserv: FlashcardDeckService) {
+  constructor(private deckserv: FlashcardDeckServiceDeprecated) {
     this.currentCardIndex = 0;
     this.showQuestion = true;
     this.refresh = false;

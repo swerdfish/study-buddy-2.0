@@ -3,7 +3,7 @@ import { GoogleApiService } from '../google-api.service';
 import { map, flatMap } from 'rxjs/operators';
 import { FlashcardDeck } from '../model/flashcard-deck';
 import { Flashcard } from '../model/flashcard';
-import { FlashcardDeckService } from '../flashcard-deck.service';
+import { FlashcardDeckServiceDeprecated } from '../flashcard-deck-deprecated.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -25,7 +25,7 @@ export class MakeBasicDeckComponent implements OnInit {
   submitted: boolean;
   loading: boolean;
 
-  constructor(private deckserv: FlashcardDeckService, private gserv: GoogleApiService, private router: Router) {
+  constructor(private deckserv: FlashcardDeckServiceDeprecated, private gserv: GoogleApiService, private router: Router) {
     this.queCol = "A";
     this.ansCol = "B";
     this.decks = [];

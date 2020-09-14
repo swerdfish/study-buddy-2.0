@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FlashcardDeck } from '../model/flashcard-deck';
-import { FlashcardDeckService } from '../flashcard-deck.service';
+import { FlashcardDeckServiceDeprecated } from '../flashcard-deck-deprecated.service';
 // import { GoogleApiService } from '../google-api.service';
 import { Store } from '@ngrx/store';
 // import { GoogleLoginSuccess } from '../store/actions/auth.actions';
@@ -17,7 +17,7 @@ export class LandingPageComponent implements OnInit {
   // user: User;
   // isSignedIn: boolean;
 
-  constructor(private deckserv: FlashcardDeckService/*, private gapiserv: GoogleApiService*/, private store: Store) { }
+  constructor(private deckserv: FlashcardDeckServiceDeprecated/*, private gapiserv: GoogleApiService*/, private store: Store) { }
 
   ngOnInit(): void {
     this.deckserv.currentDecks.subscribe(decks => this.decks = decks);

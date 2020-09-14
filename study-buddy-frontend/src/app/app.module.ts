@@ -27,10 +27,11 @@ import { ViewDeckGroupComponent } from './view-deck-group/view-deck-group.compon
 import { AbbvTitlePipe } from './abbv-title.pipe';
 import { environment } from '../environments/environment';
 import { AuthEffects } from './store/effects/auth.effects';
-import { FlashcardDeckService } from './flashcard-deck.service';
+import { FlashcardDeckServiceDeprecated } from './flashcard-deck-deprecated.service';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { UserService } from './user.service';
 import { ErrorComponent } from './error/error.component';
+import { DeckEffects } from './store/effects/deck.effects';
 
 @NgModule({
   declarations: [
@@ -57,12 +58,13 @@ import { ErrorComponent } from './error/error.component';
     StoreModule.forRoot(reducers),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     EffectsModule.forRoot([
-      AuthEffects
-    ])
+      AuthEffects,
+      DeckEffects
+    ]),
   ],
   providers: [
     GoogleApiService,
-    FlashcardDeckService,
+    FlashcardDeckServiceDeprecated,
     UserService
     // {
     //   provide: HTTP_INTERCEPTORS,

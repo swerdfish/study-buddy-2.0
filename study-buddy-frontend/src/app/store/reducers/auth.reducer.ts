@@ -12,22 +12,17 @@ export interface AuthState {
   error: string;
 }
 
+
 export const initialAuthState: AuthState = {
   user: new User(),
   token: null,
   isLoggedIn: false,
   loading: false,
   error: null
-};
+}
 
 export function authReducer(state = initialAuthState, action: AuthActions): AuthState {
   switch (action.type) {
-    // case AuthActionTypes.GOOGLE_LOGIN: {
-    //   return {
-    //     ...state,
-    //     loading: true
-    //   }
-    // }
     case AuthActionTypes.GOOGLE_LOGIN_FAILURE: {
       return {
         ...state,
@@ -47,12 +42,6 @@ export function authReducer(state = initialAuthState, action: AuthActions): Auth
     case AuthActionTypes.GOOGLE_LOGOUT: {
       return initialAuthState;
     }
-    // case AuthActionTypes.GOOGLE_REGISTER: {
-    //   return {
-    //     ...state,
-    //     loading: true
-    //   } 
-    // }
     default:
       return state;
   }

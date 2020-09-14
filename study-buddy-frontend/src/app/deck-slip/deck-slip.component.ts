@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FlashcardDeck } from '../model/flashcard-deck';
-import { FlashcardDeckService } from '../flashcard-deck.service';
+import { FlashcardDeckServiceDeprecated } from '../flashcard-deck-deprecated.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -25,7 +25,7 @@ export class DeckSlipComponent implements OnInit {
   checked: boolean;
   // @Output() checkEvent = new EventEmitter<boolean>();
 
-  constructor(private deckserv: FlashcardDeckService, private router: Router) {
+  constructor(private deckserv: FlashcardDeckServiceDeprecated, private router: Router) {
     this.refresh = false;
   }
 

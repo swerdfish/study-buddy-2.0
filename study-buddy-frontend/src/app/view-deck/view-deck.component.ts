@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FlashcardDeck } from '../model/flashcard-deck';
-import { FlashcardDeckService } from '../flashcard-deck.service';
+import { FlashcardDeckServiceDeprecated } from '../flashcard-deck-deprecated.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,7 +16,7 @@ export class ViewDeckComponent implements OnInit {
   refresh: boolean;
   cardOrder: number[];
 
-  constructor(private deckserv: FlashcardDeckService, private router: Router) {
+  constructor(private deckserv: FlashcardDeckServiceDeprecated, private router: Router) {
     this.currentCardIndex = 0;
     this.showQuestion = true;
     this.refresh = false;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FlashcardDeckService } from '../flashcard-deck.service';
+import { FlashcardDeckServiceDeprecated } from '../flashcard-deck-deprecated.service';
 import { FlashcardDeck } from '../model/flashcard-deck';
 import { fromEvent, Observable } from 'rxjs';
 import { throttleTime, map, startWith } from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class DeckDashboardComponent implements OnInit {
   }
   private _selectOrClear: boolean;
 
-  constructor(private deckserv: FlashcardDeckService) {
+  constructor(private deckserv: FlashcardDeckServiceDeprecated) {
   }
 
   ngOnInit(): void {
