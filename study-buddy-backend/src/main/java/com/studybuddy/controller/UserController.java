@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.studybuddy.exception.AuthenticationFailedException;
-import com.studybuddy.exception.ExistingUserRegistrationException;
 import com.studybuddy.exception.ResourceNotFoundException;
 import com.studybuddy.model.User;
 import com.studybuddy.service.UserService;

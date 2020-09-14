@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 	// EXISTS
 	
 	@Override
-	public boolean existsUserByUid(String uid) {
+	public boolean existsByUid(String uid) {
 		return urepo.findById(uid).isPresent();
 	}
 

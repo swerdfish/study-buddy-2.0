@@ -31,10 +31,15 @@ public class FlashcardDeckServiceImpl implements FlashcardDeckService {
 	// CREATE
 	
 	@Override
-	public FlashcardDeck createFlaschardDeck(FlashcardDeck fDeck) {
-		System.out.println("out");
-		System.out.println(fDeck);
+	public FlashcardDeck createFlashcardDeck(FlashcardDeck fDeck) {
 		return fdr.save(fDeck);
+	}
+	
+	@Override
+	public List<FlashcardDeck> createFlashcardDecks(List<FlashcardDeck> fDecks) {
+		List<FlashcardDeck> createdDecks = new ArrayList<>();
+		for (FlashcardDeck fDeck : fDecks) createdDecks.add(fdr.save(fDeck));
+		return createdDecks;
 	}
 
 	// READ
@@ -68,6 +73,13 @@ public class FlashcardDeckServiceImpl implements FlashcardDeckService {
 	public FlashcardDeck updateFlashcardDeck(FlashcardDeck fDeck) {
 		return fdr.save(fDeck);
 	}
+	
+	@Override
+	public List<FlashcardDeck> updateFlashcardDecks(List<FlashcardDeck> fDecks) {
+		List<FlashcardDeck> updatedDecks = new ArrayList<>();
+		for (FlashcardDeck fDeck : fDecks) updatedDecks.add(fdr.save(fDeck));
+		return updatedDecks;
+	}
 
 	// DELETE
 	
@@ -81,6 +93,21 @@ public class FlashcardDeckServiceImpl implements FlashcardDeckService {
 		for (FlashcardDeck fDeck : fDeckList) {
 			fdr.delete(fDeck);
 		}
+	}
+	
+	// EXISTS
+
+	@Override
+	public boolean existsAllByFidList(List<Integer> fids) {
+		for (int fid : fids) {
+			if (!fdr.findById(fid).isPresent()) return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean existsByFid(int fid) {
+		return fdr.findById(fid).isPresent();
 	}
 
 }

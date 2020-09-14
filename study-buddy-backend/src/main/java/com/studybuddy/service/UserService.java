@@ -14,6 +14,6 @@ public interface UserService {
 	// Delete
 	public void deleteUser(User user);
 	// Exists
-	public boolean existsUserByUid(String uid);
+	public boolean existsByUid(String uid);
 
 }
