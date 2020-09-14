@@ -30,13 +30,14 @@ public class FlashcardDeckFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 
+		System.out.println("test123");
 		Optional<String> userFromToken = getUserIdFromToken(request);
 		System.out.println("User id is present: "+userFromToken.isPresent());
-		System.out.println("userFromToken "+userFromToken.get());
 	    if (!userFromToken.isPresent()) {
-	      response.sendError(HttpStatus.UNAUTHORIZED.value());
+	      response.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid access token.");
 	      return;
 	    }
+		System.out.println("userFromToken "+userFromToken.get());
 	    
 	    addAuthentication(response, userFromToken.get());
 	    request.setAttribute("userId", userFromToken.get());

@@ -45,8 +45,9 @@ public class FlashcardDeckServiceImpl implements FlashcardDeckService {
 	// READ
 	
 	@Override
-	public FlashcardDeck getFlashcardDeckByFid(int fid) {
-		return fdr.findById(fid).get();
+	public FlashcardDeck getFlashcardDeckByFdid(int fdid) {
+		Optional<FlashcardDeck> fdOpt = fdr.findById(fdid);
+		return fdOpt.isPresent() ? fdOpt.get() : null;
 	}
 
 	@Override
@@ -98,16 +99,16 @@ public class FlashcardDeckServiceImpl implements FlashcardDeckService {
 	// EXISTS
 
 	@Override
-	public boolean existsAllByFidList(List<Integer> fids) {
-		for (int fid : fids) {
-			if (!fdr.findById(fid).isPresent()) return false;
+	public boolean existsAllByFdidList(List<Integer> fdids) {
+		for (int fdid : fdids) {
+			if (!fdr.findById(fdid).isPresent()) return false;
 		}
 		return true;
 	}
 
 	@Override
-	public boolean existsByFid(int fid) {
-		return fdr.findById(fid).isPresent();
+	public boolean existsByFdid(int fdid) {
+		return fdr.findById(fdid).isPresent();
 	}
 
 }

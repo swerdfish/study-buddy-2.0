@@ -10,7 +10,7 @@ public interface FlashcardDeckService {
 	public FlashcardDeck createFlashcardDeck(FlashcardDeck fDeck);
 	public List<FlashcardDeck> createFlashcardDecks(List<FlashcardDeck> fDecks);
 	// Read
-	public FlashcardDeck getFlashcardDeckByFid(int fid);
+	public FlashcardDeck getFlashcardDeckByFdid(int fdid);
 	public List<FlashcardDeck> getFlashcardDecksByUid(String uid);
 	public List<FlashcardDeck> getFlashcardDecksBySpreadsheetId(String spreadsheetId);
 	public List<FlashcardDeck> getFlashcardDecksBySpreadsheetIdOwnedByUid(String spreadsheetId, String uid);
@@ -21,7 +21,7 @@ public interface FlashcardDeckService {
 	public void deleteFlashcardDeck(FlashcardDeck fDeck);
 	public void deleteFlashcardDecks(List<FlashcardDeck> fDeckList);
 	// Exists
-	public boolean existsAllByFidList(List<Integer> fids);
-	public boolean existsByFid(int fid);
+	public boolean existsAllByFdidList(List<Integer> fdids);
+	public boolean existsByFdid(int fdid);
 
 }

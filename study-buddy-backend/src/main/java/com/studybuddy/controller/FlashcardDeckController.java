@@ -65,16 +65,18 @@ public class FlashcardDeckController {
 	
 	// READ
 	
-	@GetMapping("/flashcardDeck/{fid}")
-	public FlashcardDeck getFlashcardDeckByFid(@PathVariable int fid, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		FlashcardDeck fDeck = fds.getFlashcardDeckByFid(fid);
+	@GetMapping("/flashcardDeck/{fdid}")
+	public FlashcardDeck getFlashcardDeckByFdid(@PathVariable int fdid, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		FlashcardDeck fDeck = fds.getFlashcardDeckByFdid(fdid);
 		if (fDeck == null) {
-			response.sendError(404, "No flashcard deck found with id "+fid);
+			response.sendError(404, "No flashcard deck found with id "+fdid);
 			return null;
 		}
+		String userId = (String) request.getAttribute("userId");
+		System.out.println(userId);
 		if (!fDeck.getUser().getUid().equals((String) request.getAttribute("userId"))) {
 			throw new InvalidPermissionsException(
-					"Logged in user cannot access flashcard deck "+fid);
+					"Logged in user cannot access flashcard deck "+fdid);
 		}
 		return fDeck;
 	}
@@ -97,15 +99,15 @@ public class FlashcardDeckController {
 	
 	@PutMapping("/flashcardDeck")
 	public FlashcardDeck updateFlashcardDeck(@RequestBody FlashcardDeck fDeck, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		int fid = fDeck.getFdid();
+		int fdid = fDeck.getFdid();
 		String userId = (String) request.getAttribute("userId");
-		if (!this.fds.existsByFid(fid)) {
+		if (!this.fds.existsByFdid(fdid)) {
 			throw new ResourceNotFoundException(
 					"UPDATE ABORTED: Could not find deck with id "+fDeck.getFdid()+" to update. Consider creating it instead.");
 		}
-		if (this.fds.getFlashcardDeckByFid(fid).getUser().getUid() != userId) {
+		if (this.fds.getFlashcardDeckByFdid(fdid).getUser().getUid() != userId) {
 			throw new InvalidPermissionsException(
-					"UPDATE ABORTED: Logged in user cannot access flashcard deck "+fid);
+					"UPDATE ABORTED: Logged in user cannot access flashcard deck "+fdid);
 		}
 		if (!this.ssis.existsSpreadsheetInfoBySpreadsheetId(
 				fDeck.getSpreadsheetInfo().getSpreadsheetId())) {
@@ -119,14 +121,14 @@ public class FlashcardDeckController {
 		List<FlashcardDeck> decksToUpdate = new ArrayList<>();
 		String userId = (String) request.getAttribute("userId");
 		for (FlashcardDeck fDeck : fDecks) {
-			int fid = fDeck.getFdid();
-			if (!this.fds.existsByFid(fid)) {
+			int fdid = fDeck.getFdid();
+			if (!this.fds.existsByFdid(fdid)) {
 				throw new ResourceNotFoundException(
 						"UPDATE ABORTED: Could not find deck with id "+fDeck.getFdid()+" to update. Consider creating it instead. No decks were updated.");
 			}
-			if (this.fds.getFlashcardDeckByFid(fid).getUser().getUid() != userId) {
+			if (this.fds.getFlashcardDeckByFdid(fdid).getUser().getUid() != userId) {
 				throw new InvalidPermissionsException(
-						"UPDATE ABORTED: Logged in user cannot access flashcard deck "+fid+". No decks were updated.");
+						"UPDATE ABORTED: Logged in user cannot access flashcard deck "+fdid+". No decks were updated.");
 			}
 			if (!this.ssis.existsSpreadsheetInfoBySpreadsheetId(
 					fDeck.getSpreadsheetInfo().getSpreadsheetId())) {
@@ -140,14 +142,14 @@ public class FlashcardDeckController {
 	
 	// DELETE
 	
-	@DeleteMapping("/flashcardDeck/{fid}")
-	public void deleteFlashcardDeck(@PathVariable int fid, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		FlashcardDeck fDeck = fds.getFlashcardDeckByFid(fid);
+	@DeleteMapping("/flashcardDeck/{fdid}")
+	public void deleteFlashcardDeck(@PathVariable int fdid, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		FlashcardDeck fDeck = fds.getFlashcardDeckByFdid(fdid);
 		if (fDeck == null) {
-			response.sendError(404, "No flashcard deck found with id "+fid);
+			response.sendError(404, "No flashcard deck found with id "+fdid);
 		}
 		else if (!fDeck.getUser().getUid().equals((String) request.getAttribute("userId"))) {
-			response.sendError(403, "Logged in user cannot access flashcard deck "+fid);
+			response.sendError(403, "Logged in user cannot access flashcard deck "+fdid);
 		} else {
 			fds.deleteFlashcardDeck(fDeck);
 			response.setStatus(204);
@@ -155,18 +157,18 @@ public class FlashcardDeckController {
 	}
 	
 	@DeleteMapping("/flashcardDecks")
-	public void deleteFlashcardDeck(@RequestBody List<Integer> fids, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void deleteFlashcardDeck(@RequestBody List<Integer> fdids, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		List<FlashcardDeck> fDeckList = new ArrayList<>();
-		for (int fid : fids) {
-			if (!fds.existsByFid(fid)) {
-				response.sendError(404, "DELETE ABORTED: No flashcard deck with id "+fid+" found. No decks were deleted.");
+		for (int fdid : fdids) {
+			if (!fds.existsByFdid(fdid)) {
+				response.sendError(404, "DELETE ABORTED: No flashcard deck with id "+fdid+" found. No decks were deleted.");
 				return;
 			} else {
-				FlashcardDeck fDeck = fds.getFlashcardDeckByFid(fid);
+				FlashcardDeck fDeck = fds.getFlashcardDeckByFdid(fdid);
 				if (fDeck.getUser().getUid().equals((String) request.getAttribute("userId"))) {
 					fDeckList.add(fDeck);
 				} else {
-					response.sendError(403, "DELETE ABORTED: Flashcard deck with id "+fid+" found, but does not belong to logged in user. No decks were deleted.");
+					response.sendError(403, "DELETE ABORTED: Flashcard deck with id "+fdid+" found, but does not belong to logged in user. No decks were deleted.");
 					return;
 				}
 			}
