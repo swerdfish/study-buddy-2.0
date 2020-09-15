@@ -49,24 +49,35 @@ export const clearSelectedDecks = createAction(
 );
 
 export const deleteActiveDeck = createAction(
-  '[Deck] Delete Active Deck',
-  props<{ token: string }>()
+  '[Deck] Delete Active Deck'
+);
+
+export const deleteDeck = createAction(
+  '[Deck] Delete Deck',
+  props<{ deck: FlashcardDeck }>()
+);
+
+export const deleteDeckById = createAction(
+  '[Deck] Delete Deck by Id',
+  props<{ deckId: string }>()
 );
 
 export const deleteSelectedDecks = createAction(
-  '[Deck] Delete Selected Decks',
-  props<{ token: string }>()
+  '[Deck] Delete Selected Decks'
 );
 
 export const deleteUserDecks = createAction(
-  '[Deck] Delete User Decks',
-  props<{ token: string }>()
+  '[Deck] Delete User Decks'
 )
 
 export const fetchUserDecks = createAction(
-  '[Deck] Fetch User Decks',
-  props<{ token: string }>()
+  '[Deck] Fetch User Decks'
 );
+
+export const fetchUserDecksSuccessful = createAction(
+  '[Deck] Fetch User Decks Successful',
+  props<{ userDecks: FlashcardDeck[], token: string }>()
+)
 
 export const removeDecksFromSelectedDecks = createAction(
   '[Deck] Remove Decks from Selected Decks',
@@ -89,16 +100,13 @@ export const removeFromUserDecks = createAction(
 );
 
 export const saveActiveDeck = createAction(
-  '[Deck] Save Active Deck',
-  props<{ token: string }>()
+  '[Deck] Save Active Deck'
 );
 
 export const saveSelectedDecks = createAction(
-  '[Deck] Save Selected Decks',
-  props<{ token: string }>()
+  '[Deck] Save Selected Decks'
 );
 
 export const saveUserDecks = createAction(
-  '[Deck] Save User Decks',
-  props<{ token: string }>()
+  '[Deck] Save User Decks'
 );

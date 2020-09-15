@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FlashcardDeck } from '../model/flashcard-deck';
-import { FlashcardDeckServiceDeprecated } from '../flashcard-deck-deprecated.service';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { selectActiveDeck } from '../store';
+import * as deckActions from '../store/actions/deck.actions';
 
 @Component({
   selector: 'app-view-deck',
@@ -10,30 +13,34 @@ import { Router } from '@angular/router';
 })
 export class ViewDeckComponent implements OnInit {
 
+  getActiveDeck: Observable<FlashcardDeck>;
   deck: FlashcardDeck;
   currentCardIndex: number;
   showQuestion: boolean;
   refresh: boolean;
   cardOrder: number[];
 
-  constructor(private deckserv: FlashcardDeckServiceDeprecated, private router: Router) {
+  constructor(
+    private router: Router,
+    private store: Store) {
     this.currentCardIndex = 0;
     this.showQuestion = true;
     this.refresh = false;
+    this.getActiveDeck = this.store.select(selectActiveDeck);
   }
 
   ngOnInit(): void {
-    this.deckserv.currentActiveDeck.subscribe(deck => {
-      this.deck = deck;
+    this.getActiveDeck.subscribe(activeDeck => {
+      this.deck = activeDeck;
       // Populate cards if not already populated
-      if (deck.cards.length == 0) this.deck.populateCards(true);
+      if (this.deck.cards.length == 0) this.deck.populateCards(true);
       // Start cardOrder in sequential order
       this.cardOrder = [...Array(this.deck.cards.length).keys()];
-    });
+    })
   }
 
   deleteDeck(): void {
-    this.deckserv.removeDeck(this.deck);
+    this.store.dispatch(deckActions.deleteActiveDeck());
     this.router.navigateByUrl("/dashboard");
   }
 

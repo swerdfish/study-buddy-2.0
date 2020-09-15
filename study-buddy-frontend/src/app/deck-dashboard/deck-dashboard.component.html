@@ -6,20 +6,17 @@
                 <div class="level-item">
                     <h1 class="title">My Flashcard Decks</h1>
                 </div>
-                <!-- <div class="level-item">
-                    <p class="subtitle">{{screenSize}}</p>
-                </div> -->
             </div>
             <div class="level-right">
                 <div class="level-item">
                     <div class="buttons">
-                        <button class="button is-info" [disabled]="deckGroup.length==decks.length"
+                        <button class="button is-info" [disabled]="selectedDecks.length==decks.length"
                             (click)="selectOrClear=true">Select All</button>
-                        <button class="button is-info is-light" [disabled]="deckGroup.length==0"
+                        <button class="button is-info is-light" [disabled]="selectedDecks.length==0"
                             (click)="selectOrClear=false">Clear Selection</button>
                         <button class="button is-primary" routerLink="/view-group"
-                            [disabled]="deckGroup.length < 1">View Deck
-                            Group ({{deckGroup.length}} {{deckGroup.length==1 ? "deck" : "decks"}})</button>
+                            [disabled]="selectedDecks.length < 1">View Deck
+                            Group ({{selectedDecks.length}} {{selectedDecks.length==1 ? "deck" : "decks"}})</button>
                     </div>
                 </div>
             </div>

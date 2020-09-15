@@ -1,7 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FlashcardDeck } from '../model/flashcard-deck';
-import { FlashcardDeckServiceDeprecated } from '../flashcard-deck-deprecated.service';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { selectSelectedDecks } from '../store';
+import * as deckActions from '../store/actions/deck.actions';
 
 @Component({
   selector: 'app-deck-slip',
@@ -10,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class DeckSlipComponent implements OnInit {
 
+  getSelectedDecks: Observable<FlashcardDeck[]>;
   @Input() deck: FlashcardDeck;
   @Input() // select is true, clear is false
   get selectOrClear(): boolean { return this._selectOrClear; }
@@ -23,36 +27,32 @@ export class DeckSlipComponent implements OnInit {
   @Input() screenSize: number;
   refresh: boolean;
   checked: boolean;
-  // @Output() checkEvent = new EventEmitter<boolean>();
 
-  constructor(private deckserv: FlashcardDeckServiceDeprecated, private router: Router) {
+  constructor(
+    // private deckserv: FlashcardDeckServiceDeprecated,
+    private router: Router,
+    private store: Store) {
+    this.getSelectedDecks = this.store.select(selectSelectedDecks);
     this.refresh = false;
   }
 
   ngOnInit(): void {
     this.checked = false;
-    this.deckserv.currentDeckGroup.subscribe(groupDecks => {
-      // console.log("test test 1, 2");
-      if (groupDecks.length == 0) {
-        this.checked = false;
-      } else {
-        for (let gdeck of groupDecks) {
-          if (this.deck.deckId == gdeck.deckId) {
-            // console.log(this.deck.deckId);
-            // console.log(gdeck.deckId);
+    this.getSelectedDecks.subscribe(selectedDecks => {
+      this.checked = false;
+      if (selectedDecks && selectedDecks.length > 0) {
+        for (let sdeck of selectedDecks) {
+          if (this.deck.deckId == sdeck.deckId) {
             this.checked = true;
             break;
-          }/* else {
-            // console.log("hello");
-            this.checked = false;
-          }*/
+          }
         }
       }
     });
   }
 
   viewDeck() {
-    this.deckserv.changeActiveDeck(this.deck);
+    this.store.dispatch(deckActions.changeActiveDeck({ deck: this.deck }));
     this.router.navigateByUrl('/view');
   }
 
@@ -63,18 +63,16 @@ export class DeckSlipComponent implements OnInit {
   }
 
   deleteDeck() {
-    console.log("Delete deck.")
-    this.deckserv.removeDeck(this.deck);
+    this.store.dispatch(deckActions.deleteDeck({ deck: this.deck }))
   }
 
   checkbox() {
     this.checked = !this.checked;
     if (this.checked) {
-      this.deckserv.addDeckToGroup(this.deck);
+      this.store.dispatch(deckActions.addToSelectedDecks({ deck: this.deck }));
     } else {
-      this.deckserv.removeDeckFromGroup(this.deck);
+      this.store.dispatch(deckActions.removeFromSelectedDecks({ deck: this.deck }));
     }
-    // this.checkEvent.emit(this.checked);
   }
 
 }

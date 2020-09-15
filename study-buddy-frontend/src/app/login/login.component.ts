@@ -10,6 +10,8 @@ import * as credKey from '../../../../../sheets-cred-key_studyBuddy.json'
 })
 export class LoginComponent implements OnInit, AfterViewInit {
 
+  // DEPRECATED!
+
   clientId: string;
   firstName: string;
   lastName: string;

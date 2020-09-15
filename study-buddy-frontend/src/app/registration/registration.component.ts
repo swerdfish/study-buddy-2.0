@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectAuthState } from '../store';
 import { User } from '../model/user.model';
-import { GoogleLoginSuccess } from '../store/actions/auth.actions';
 
 @Component({
   selector: 'app-registration',
@@ -13,6 +12,8 @@ import { GoogleLoginSuccess } from '../store/actions/auth.actions';
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit, AfterViewInit {
+
+  // DEPRECATED!
 
   email: string;
   firstName: string;

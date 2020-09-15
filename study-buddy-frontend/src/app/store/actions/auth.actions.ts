@@ -7,7 +7,8 @@ export enum AuthActionTypes {
   GOOGLE_LOGIN_FAILURE = '[Auth] Google Login Failure',
   GOOGLE_LOGIN_SUCCESS = '[Auth] Google Login Success',
   GOOGLE_LOGOUT = '[Auth] Google Logout',
-  GOOGLE_REGISTER = '[Auth] Google Register'
+  GOOGLE_REGISTER = '[Auth] Google Register',
+  SET_ACCESS_TOKEN = '[Auth] Set Access Token'
 }
 
 export class AuthError implements Action {
@@ -43,9 +44,15 @@ export class GoogleRegister implements Action {
   constructor(public payload: any) { }
 }
 
+export class SetAccessToken implements Action {
+  readonly type = AuthActionTypes.SET_ACCESS_TOKEN;
+  constructor(public payload: { token: string }) { }
+}
+
 export type AuthActions =
   | AuthError
   | GoogleLogin | GoogleLoginFailure | GoogleLoginSuccess
   | GoogleLogout
-  | GoogleRegister;
+  | GoogleRegister
+  | SetAccessToken;
 

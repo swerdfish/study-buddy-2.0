@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FlashcardDeck } from './model/flashcard-deck';
@@ -14,7 +14,7 @@ export class FlashcardDeckService {
 
   // CREATE
 
-  createFlashcardDeck(deck: FlashcardDeck, token: string): Observable<FlashcardDeck> {
+  createFlashcardDeck(deck: FlashcardDeck, token: string): Observable<HttpResponse<FlashcardDeck>> {
     return this.http.post<FlashcardDeck>(
       this.baseUrl + "/flashcardDeck",
       deck,
@@ -22,12 +22,13 @@ export class FlashcardDeckService {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
-        }
+        },
+        observe: 'response'
       }
     );
   }
 
-  createFlashcardDecks(decks: FlashcardDeck[], token: string): Observable<FlashcardDeck[]> {
+  createFlashcardDecks(decks: FlashcardDeck[], token: string): Observable<HttpResponse<FlashcardDeck[]>> {
     return this.http.post<FlashcardDeck[]>(
       this.baseUrl + "/flashcardDecks",
       decks,
@@ -35,52 +36,56 @@ export class FlashcardDeckService {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
-        }
+        },
+        observe: 'response'
       }
     );
   }
 
   // READ
 
-  getFlashcardDeckById(deckId: number, token: string): Observable<FlashcardDeck> {
+  getFlashcardDeckById(deckId: number, token: string): Observable<HttpResponse<FlashcardDeck>> {
     return this.http.get<FlashcardDeck>(
       this.baseUrl + `/flashcardDeck/${deckId}`,
       {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
-        }
+        },
+        observe: 'response'
       }
     );
   }
 
-  getFlashcardDecksBySpreadsheetIdOwnedByUser(ssId: number, token: string): Observable<FlashcardDeck[]> {
+  getFlashcardDecksBySpreadsheetIdOwnedByUser(ssId: number, token: string): Observable<HttpResponse<FlashcardDeck[]>> {
     return this.http.get<FlashcardDeck[]>(
       this.baseUrl + `/flashcardDecks/${ssId}`,
       {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
-        }
+        },
+        observe: 'response'
       }
     );
   }
 
-  getFlashcardDecksOwnedByUser(token: string): Observable<FlashcardDeck[]> {
+  getFlashcardDecksOwnedByUser(token: string): Observable<HttpResponse<FlashcardDeck[]>> {
     return this.http.get<FlashcardDeck[]>(
       this.baseUrl + `/flashcardDecks`,
       {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
-        }
+        },
+        observe: 'response'
       }
     );
   }
 
   // UPDATE
 
-  updateFlashcardDeck(deck: FlashcardDeck, token: string): Observable<FlashcardDeck> {
+  updateFlashcardDeck(deck: FlashcardDeck, token: string): Observable<HttpResponse<FlashcardDeck>> {
     return this.http.put<FlashcardDeck>(
       this.baseUrl + "/flashcardDeck",
       deck,
@@ -88,12 +93,13 @@ export class FlashcardDeckService {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
-        }
+        },
+        observe: 'response'
       }
     );
   }
 
-  updateFlashcardDecks(decks: FlashcardDeck[], token: string): Observable<FlashcardDeck[]> {
+  updateFlashcardDecks(decks: FlashcardDeck[], token: string): Observable<HttpResponse<FlashcardDeck[]>> {
     return this.http.put<FlashcardDeck[]>(
       this.baseUrl + "/flashcardDecks",
       decks,
@@ -101,26 +107,28 @@ export class FlashcardDeckService {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
-        }
+        },
+        observe: 'response'
       }
     );
   }
 
   // DELETE
 
-  deleteFlashcardDeckById(deckId: number, token: string): Observable<void> {
+  deleteFlashcardDeckById(deckId: number, token: string): Observable<HttpResponse<void>> {
     return this.http.delete<void>(
       this.baseUrl + `flashcardDeck/${deckId}`,
       {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
-        }
+        },
+        observe: 'response'
       }
     );
   }
 
-  deleteFlashcardDecksByIds(deckIds: number[], token: string): Observable<void> {
+  deleteFlashcardDecksByIds(deckIds: number[], token: string): Observable<HttpResponse<void>> {
     return this.http.request<void>(
       'delete',
       this.baseUrl + `/flashcardDecks`,
@@ -129,19 +137,21 @@ export class FlashcardDeckService {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
-        }
+        },
+        observe: 'response'
       }
     );
   }
 
-  deleteFlashcardDecksOwnedByUser(token: string): Observable<void> {
+  deleteFlashcardDecksOwnedByUser(token: string): Observable<HttpResponse<void>> {
     return this.http.delete<void>(
       this.baseUrl + `/flashcardDecks/user`,
       {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
-        }
+        },
+        observe: 'response'
       }
     );
   }

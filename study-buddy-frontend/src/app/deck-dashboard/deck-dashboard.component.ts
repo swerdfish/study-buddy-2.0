@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FlashcardDeckServiceDeprecated } from '../flashcard-deck-deprecated.service';
 import { FlashcardDeck } from '../model/flashcard-deck';
 import { fromEvent, Observable } from 'rxjs';
 import { throttleTime, map, startWith } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { DeckState } from '../store/reducers/deck.reducer';
+import { selectDeckState } from '../store';
+import * as deckActions from '../store/actions/deck.actions';
 
 @Component({
   selector: 'app-deck-dashboard',
@@ -11,27 +14,31 @@ import { throttleTime, map, startWith } from 'rxjs/operators';
 })
 export class DeckDashboardComponent implements OnInit {
 
+  getDeckState: Observable<DeckState>;
   decks: FlashcardDeck[];
-  deckGroup: FlashcardDeck[];
+  selectedDecks: FlashcardDeck[];
   screenSize: number;
 
   get selectOrClear(): boolean { return this._selectOrClear; }
   set selectOrClear(selectOrClear: boolean) {
     if (selectOrClear === true) {
-      this.deckserv.changeDecksInGroup(Array.from(this.decks));
+      this.store.dispatch(deckActions.addDecksToSelectedDecks({ decks: this.decks }));
     } else if (selectOrClear === false) {
-      this.deckserv.clearDecksInGroup();
+      this.store.dispatch(deckActions.clearSelectedDecks());
     }
     this._selectOrClear = selectOrClear;
   }
   private _selectOrClear: boolean;
 
-  constructor(private deckserv: FlashcardDeckServiceDeprecated) {
+  constructor(private store: Store) {
+    this.getDeckState = this.store.select(selectDeckState);
   }
 
   ngOnInit(): void {
-    this.deckserv.currentDecks.subscribe(decks => this.decks = decks);
-    this.deckserv.currentDeckGroup.subscribe(gdecks => this.deckGroup = gdecks);
+    this.getDeckState.subscribe(state => {
+      this.decks = state.userDecks;
+      this.selectedDecks = state.selectedDecks;
+    })
 
     // Checks if screen size is less than 1024 pixels
     const checkScreenSize = () => document.body.offsetWidth;

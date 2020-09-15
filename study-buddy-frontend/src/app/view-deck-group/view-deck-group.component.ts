@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CompositeDeck } from '../model/composite-deck.model';
-import { FlashcardDeckServiceDeprecated } from '../flashcard-deck-deprecated.service';
 import { FlashcardDeck } from '../model/flashcard-deck';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { selectSelectedDecks } from '../store';
+import * as deckActions from '../store/actions/deck.actions';
 
 @Component({
   selector: 'app-view-deck-group',
@@ -10,29 +13,23 @@ import { FlashcardDeck } from '../model/flashcard-deck';
 })
 export class ViewDeckGroupComponent implements OnInit {
 
+  getSelectedDecks: Observable<FlashcardDeck[]>;
   compositeDeck: CompositeDeck;
   currentCardIndex: number;
   showQuestion: boolean;
   refresh: boolean;
   cardOrder: number[];
 
-  constructor(private deckserv: FlashcardDeckServiceDeprecated) {
+  constructor(private store: Store) {
     this.currentCardIndex = 0;
     this.showQuestion = true;
     this.refresh = false;
+    this.getSelectedDecks = this.store.select(selectSelectedDecks);
   }
 
   deleteDeck(): void {
-    let deck: FlashcardDeck;
-    this.deckserv.currentDeckGroup.subscribe(gdecks => {
-      for (let gd of gdecks) {
-        if (gd.deckId = this.compositeDeck.compCards[this.cardOrder[this.currentCardIndex]].title) {
-          deck = gd;
-          break;
-        }
-      }
-    })
-    this.deckserv.removeDeckFromGroup(deck);
+    let deckId: string = this.compositeDeck.compCards[this.cardOrder[this.currentCardIndex]].deckId;
+    this.store.dispatch(deckActions.deleteDeckById({ deckId: deckId }))
   }
 
   flipCard(): void {
@@ -54,28 +51,23 @@ export class ViewDeckGroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.compositeDeck);
-    this.deckserv.currentDeckGroup.subscribe(gdecks => {
-      console.log(this.compositeDeck);
-      console.log(gdecks);
-      this.compositeDeck = new CompositeDeck(gdecks);
+    this.getSelectedDecks.subscribe(selectedDecks => {
+      this.compositeDeck = new CompositeDeck(selectedDecks);
       // Populate cards if not already populated
       if (this.compositeDeck.compCards.length == 0) this.refreshDeckGroup();
       // Start cardOrder in sequential order
       this.cardOrder = [...Array(this.compositeDeck.compCards.length).keys()];
-      console.log(this.compositeDeck);
     })
   }
 
   refreshDeckGroup(): void {
     this.refresh = !this.refresh;
-    // this.deckserv.refreshDeckGroup();
-    this.deckserv.currentDeckGroup.subscribe(gdecks => {
-      for (let g = 0; g < gdecks.length; g++) {
-        gdecks[g].populateCards(true);
+    this.getSelectedDecks.subscribe(selectedDecks => {
+      for (let s = 0; s < selectedDecks.length; s++) {
+        selectedDecks[s].populateCards(true);
       }
       console.log("new!");
-      this.compositeDeck = new CompositeDeck(gdecks);
+      this.compositeDeck = new CompositeDeck(selectedDecks);
       let difference = this.compositeDeck.compCards.length - this.cardOrder.length;
       if (difference < 0) {
         // the amount of cards shrunk, remove elements from cardOrder

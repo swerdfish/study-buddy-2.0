@@ -42,6 +42,12 @@ export function authReducer(state = initialAuthState, action: AuthActions): Auth
     case AuthActionTypes.GOOGLE_LOGOUT: {
       return initialAuthState;
     }
+    case AuthActionTypes.SET_ACCESS_TOKEN: {
+      return {
+        ...state,
+        token: action.payload.token
+      }
+    }
     default:
       return state;
   }

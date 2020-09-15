@@ -102,6 +102,7 @@ export const deckReducer = createReducer(
   ),
   on(
     deckActions.clearAllDecks,
+    deckActions.deleteUserDecks,
     () => initialDeckState
   ),
   on(
@@ -113,15 +114,72 @@ export const deckReducer = createReducer(
   ),
   // Delete Actions
   /* 
-   * The delete deck(s) actions will take place only in effects and
-   * update the backend, then call the appropriate actions to update
-   * state (i.e. the corresponding clear or remove actions).
+   * The delete deck(s) actions will call the backend in effects and
+   * update the token, here it will change state accordingly.
    */
+  on(
+    deckActions.deleteActiveDeck,
+    (state: DeckState) => {
+      let deckToRemove = state.activeDeck;
+      state.activeDeck = null;
+      state.selectedDecks = state.selectedDecks.filter(
+        sdeck => sdeck.deckId != deckToRemove.deckId
+      );
+      state.userDecks = state.userDecks.filter(
+        udeck => udeck.deckId != deckToRemove.deckId
+      );
+      return state;
+    }
+  ),
+  // deckActions.deleteDeck state update: see removeFromUserDecks
+  on(
+    deckActions.deleteDeckById,
+    (state: DeckState, { deckId }) => ({
+      ...state,
+      userDecks: state.userDecks.filter(
+        (fDeck: FlashcardDeck) => fDeck.deckId != deckId
+      ),
+      selectedDecks: state.selectedDecks.filter(
+        (sDeck: FlashcardDeck) => sDeck.deckId != deckId
+      ),
+      activeDeck: state.activeDeck.deckId == deckId ? null : state.activeDeck
+    })
+  ),
+  on(
+    deckActions.deleteSelectedDecks,
+    (state: DeckState) => {
+      let deckIdsToRemove: string[] = state.selectedDecks.map(deck => deck.deckId);
+      state.selectedDecks = [];
+      state.userDecks = state.userDecks.filter(
+        udeck => !deckIdsToRemove.includes(udeck.deckId)
+      );
+      if (deckIdsToRemove.includes(state.activeDeck.deckId)) state.activeDeck = null;
+      return state;
+    }
+  ),
+  // for deckActions.deleteUserDecks see deckActions.clearAllDecks
   // Fetch Action
   /*
    * The fetchUserDecks action will take place only in effects and
-   * then call changeUserDecks.
+   * then call fetchUserDecksSuccessful to update state accordingly.
    */
+  // Fetch Successful Action
+  on(
+    deckActions.fetchUserDecksSuccessful,
+    (state: DeckState, { userDecks }) => {
+      state.userDecks = userDecks;
+      let selectedDeckIds: string[] = state.selectedDecks.map(deck => deck.deckId);
+      state.selectedDecks = userDecks.filter(udeck => selectedDeckIds.includes(udeck.deckId));
+      for (let udeck of userDecks) {
+        if (udeck.deckId == state.activeDeck.deckId) {
+          state.activeDeck = udeck;
+          return state;
+        }
+      }
+      state.activeDeck = null;
+      return state;
+    }
+  ),
   // Remove Actions
   /*
    * The remove deck(s) actions remove from the frontend only. 
@@ -161,6 +219,7 @@ export const deckReducer = createReducer(
   ),
   on(
     deckActions.removeFromUserDecks,
+    deckActions.deleteDeck,
     (state, { deck }) => ({
       ...state,
       userDecks: state.userDecks.filter(

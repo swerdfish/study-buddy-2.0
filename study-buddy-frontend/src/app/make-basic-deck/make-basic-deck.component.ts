@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { GoogleApiService } from '../google-api.service';
-import { map, flatMap } from 'rxjs/operators';
 import { FlashcardDeck } from '../model/flashcard-deck';
 import { Flashcard } from '../model/flashcard';
-import { FlashcardDeckServiceDeprecated } from '../flashcard-deck-deprecated.service';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import * as deckActions from '../store/actions/deck.actions';
 
 @Component({
   selector: 'app-make-basic-deck',
@@ -25,7 +25,10 @@ export class MakeBasicDeckComponent implements OnInit {
   submitted: boolean;
   loading: boolean;
 
-  constructor(private deckserv: FlashcardDeckServiceDeprecated, private gserv: GoogleApiService, private router: Router) {
+  constructor(
+    private gserv: GoogleApiService,
+    private router: Router,
+    private store: Store) {
     this.queCol = "A";
     this.ansCol = "B";
     this.decks = [];
@@ -36,7 +39,7 @@ export class MakeBasicDeckComponent implements OnInit {
   }
 
   createDecks() {
-    this.deckserv.addDecks(this.decks);
+    this.store.dispatch(deckActions.addDecksToUserDecks({ decks: this.decks }));
     this.router.navigateByUrl('/dashboard');
   }
 
@@ -56,20 +59,9 @@ export class MakeBasicDeckComponent implements OnInit {
     }
     let temp = this.spreadsheetUrl.split("docs.google.com/spreadsheets/d/");
     this.spreadsheetId = temp[temp.length - 1].split("\/")[0];
-    // console.log(this.spreadsheetId);
 
     this.gserv.getAllSheetInfo(this.spreadsheetId).subscribe(
       response => {
-        // console.log(response);
-        // Google Sheets will not let worksheets in the same spreadsheet share the same name.
-        // let titles = {};
-        // for (let sheet of response.result.sheets) {
-        //   if (sheet.properties.title in titles) {
-        //     throw new Error("Cannot have sheets with the same name.");
-        //   } else {
-        //     titles[sheet.properties.title] = 1;
-        //   }
-        // }
         for (let s = 0; s < response.result.sheets.length; s++) {
           let title = response.result.sheets[s].properties.title;
           this.gserv.getSheetValues(this.spreadsheetId,
@@ -87,7 +79,6 @@ export class MakeBasicDeckComponent implements OnInit {
                   }
                 }
                 this.decks.push(deck);
-                // console.log(this.decks);
               }
             ).catch(err => {
               this.errorCode = err.result.error.code;

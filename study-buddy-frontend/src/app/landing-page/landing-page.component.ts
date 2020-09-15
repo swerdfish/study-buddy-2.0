@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FlashcardDeck } from '../model/flashcard-deck';
-import { FlashcardDeckServiceDeprecated } from '../flashcard-deck-deprecated.service';
-// import { GoogleApiService } from '../google-api.service';
 import { Store } from '@ngrx/store';
-// import { GoogleLoginSuccess } from '../store/actions/auth.actions';
-// import { User } from '../model/user.model';
+import { Observable } from 'rxjs';
+import { selectUserDecks } from '../store';
 
 @Component({
   selector: 'app-landing-page',
@@ -13,30 +11,17 @@ import { Store } from '@ngrx/store';
 })
 export class LandingPageComponent implements OnInit {
 
+  getUserDecks: Observable<FlashcardDeck[]>;
   decks: FlashcardDeck[];
-  // user: User;
-  // isSignedIn: boolean;
 
-  constructor(private deckserv: FlashcardDeckServiceDeprecated/*, private gapiserv: GoogleApiService*/, private store: Store) { }
+  constructor(private store: Store) {
+    this.getUserDecks = this.store.select(selectUserDecks);
+  }
 
   ngOnInit(): void {
-    this.deckserv.currentDecks.subscribe(decks => this.decks = decks);
-    // this.gapiserv.isGoogleUserSignedIn().subscribe(signedIn => this.isSignedIn = signedIn);
-    // this.gapiserv.getGoogleAuthInstance().subscribe(googleAuth => {
-    //   this.isSignedIn = googleAuth.isSignedIn.get();
-    //   if (this.isSignedIn) {
-    //     let profile = googleAuth.currentUser.get().getBasicProfile()
-    //     this.user = {
-    //       email: profile.getEmail(),
-    //       firstName: profile.getGivenName(),
-    //       lastName: profile.getFamilyName(),
-    //       uid: "0"
-    //     };
-    //     this.store.dispatch(new GoogleLoginSuccess({
-    //       user: this.user
-    //     }));
-    //   }
-    // });
+    this.getUserDecks.subscribe(userDecks => {
+      this.decks = userDecks;
+    })
   }
 
 }

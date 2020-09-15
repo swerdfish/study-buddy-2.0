@@ -11,15 +11,15 @@ import { Observable } from 'rxjs';
 })
 export class ErrorComponent implements OnInit {
 
-  getState: Observable<AuthState>;
+  getAuthState: Observable<AuthState>;
   error: string;
 
   constructor(private store: Store) {
-    this.getState = this.store.select(selectAuthState);
+    this.getAuthState = this.store.select(selectAuthState);
   }
 
   ngOnInit(): void {
-    this.getState.subscribe((state: AuthState) => {
+    this.getAuthState.subscribe((state: AuthState) => {
       this.error = state.error;
     })
   }
