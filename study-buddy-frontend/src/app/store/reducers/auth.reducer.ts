@@ -32,6 +32,7 @@ export function authReducer(state = initialAuthState, action: AuthActions): Auth
       }
     }
     case AuthActionTypes.GOOGLE_LOGIN_SUCCESS: {
+      console.log(action.payload);
       return {
         ...state,
         ...action.payload,

@@ -44,6 +44,13 @@ export class GoogleApiService {
     );
   }
 
+  getAllSheetValues(spreadsheetId: string) {
+    return this.googleApi.pipe(
+      flatMap(() => from(this.initGapiClient())),
+      flatMap(() => from(this.getAllSheets_FieldValues(spreadsheetId)))
+    )
+  }
+
   getAllValues(spreadsheetId: string) {
     return from(gapi.client.init({
       apiKey: credKey.api_key,
@@ -119,6 +126,13 @@ export class GoogleApiService {
   async getAllSheets(spreadsheetId: string) {
     return gapi.client.sheets.spreadsheets.get({
       spreadsheetId: spreadsheetId
+    });
+  }
+
+  async getAllSheets_FieldValues(spreadsheetId: string) {
+    return gapi.client.sheets.spreadsheets.get({
+      spreadsheetId: spreadsheetId,
+      fields: "sheets/properties,sheets/data/rowData"
     });
   }
 

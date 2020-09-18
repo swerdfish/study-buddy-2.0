@@ -6,6 +6,7 @@ import { selectAuthState } from '../store';
 import { AuthState } from '../store/reducers/auth.reducer';
 import * as credKey from '../../../../../sheets-cred-key_studyBuddy.json'
 import { GoogleLogin, GoogleRegister, GoogleLogout } from '../store/actions/auth.actions';
+import * as deckActions from '../store/actions/deck.actions';
 
 @Component({
   selector: 'app-navbar',
@@ -62,6 +63,7 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     this.store.dispatch(new GoogleLogout(null));
+    this.store.dispatch(deckActions.clearAllDecks());
   }
 
 }

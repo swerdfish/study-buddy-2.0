@@ -8,6 +8,7 @@ import { Observable, of, from } from 'rxjs';
 import { UserService } from 'src/app/user.service';
 import { User } from 'src/app/model/user.model';
 import { HttpResponse } from '@angular/common/http';
+import * as deckActions from '../actions/deck.actions';
 
 
 @Injectable()
@@ -39,7 +40,8 @@ export class AuthEffects {
       return this.userv.loginGoogleUser(idToken);
     }),
     map((resp: HttpResponse<User>) => {
-      return new GoogleLoginSuccess({ user: resp.body, token: resp.headers.get('Authorization') });
+      console.log(resp.headers.keys);
+      return new GoogleLoginSuccess({ user: resp.body, token: resp.headers.get('Authorization').split(" ")[1] });
     }),
     catchError(() => {
       return of(new GoogleLoginFailure(null));
@@ -71,7 +73,8 @@ export class AuthEffects {
       return this.userv.registerGoogleUser(idToken);
     }),
     map((resp: HttpResponse<User>) => {
-      return new GoogleLoginSuccess({ user: resp.body, token: resp.headers.get('Authorization') });
+      console.log(resp.headers);
+      return new GoogleLoginSuccess({ user: resp.body, token: resp.headers.get('Authorization').split(" ")[1] });
     }),
     catchError(() => {
       return of(new GoogleLoginFailure(null));
@@ -84,6 +87,12 @@ export class AuthEffects {
     tap((action: GoogleLoginFailure) => {
       this.router.navigateByUrl('/error');
     })
+  );
+
+  @Effect()
+  GoogleLoginSuccess: Observable<any> = this.actions$.pipe(
+    ofType(AuthActionTypes.GOOGLE_LOGIN_SUCCESS),
+    map(() => deckActions.fetchUserDecks())
   )
 
 }

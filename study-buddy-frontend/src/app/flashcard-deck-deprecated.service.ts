@@ -59,22 +59,22 @@ export class FlashcardDeckServiceDeprecated {
     this.changeDecksInGroup([]);
   }
 
-  refreshDeckGroup(deckId?: string): void {
-    let deckGroup = this.deckGroupSource.value;
-    if (deckId) {
-      for (let d = 0; d < deckGroup.length; d++) {
-        if (deckId == deckGroup[d].deckId) {
-          deckGroup[d].populateCards(true);
-          break;
-        }
-      }
-    } else {
-      for (let d = 0; d < deckGroup.length; d++) {
-        deckGroup[d].populateCards(true);
-      }
-    }
-    this.changeDecksInGroup(deckGroup);
-  }
+  // refreshDeckGroup(deckId?: string): void {
+  //   let deckGroup = this.deckGroupSource.value;
+  //   if (deckId) {
+  //     for (let d = 0; d < deckGroup.length; d++) {
+  //       if (deckId == deckGroup[d].deckId) {
+  //         deckGroup[d].populateCards(true);
+  //         break;
+  //       }
+  //     }
+  //   } else {
+  //     for (let d = 0; d < deckGroup.length; d++) {
+  //       deckGroup[d].populateCards(true);
+  //     }
+  //   }
+  //   this.changeDecksInGroup(deckGroup);
+  // }
 
   removeDeck(deck: FlashcardDeck): void {
     let decks: FlashcardDeck[] = this.deckSource.value;

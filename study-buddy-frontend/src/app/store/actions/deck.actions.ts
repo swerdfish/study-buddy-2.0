@@ -77,6 +77,31 @@ export const fetchUserDecks = createAction(
 export const fetchUserDecksSuccessful = createAction(
   '[Deck] Fetch User Decks Successful',
   props<{ userDecks: FlashcardDeck[], token: string }>()
+);
+
+export const populateAllCards = createAction(
+  '[Deck] Populate All Cards',
+  props<{ spreadsheetIds: string[], token: string }>()
+);
+
+export const populateCardsForDeckId = createAction(
+  '[Deck] Populate Cards for DeckId',
+  props<{ deckId: string }>()
+);
+
+export const populateCardsForSpreadsheetId = createAction(
+  '[Deck] Populate Cards for Spreadsheet Id',
+  props<{ spreadsheetId: string }>()
+);
+
+export const populateCardsUpdateDecks = createAction(
+  '[Deck] Populate Cards Update Decks',
+  props<{ decks: FlashcardDeck[] }>()
+);
+
+export const populateCardsUpdateDecksSuccessful = createAction(
+  '[Deck] Populate Cards Update Decks',
+  props<{ decks: FlashcardDeck[], token: string }>()
 )
 
 export const removeDecksFromSelectedDecks = createAction(
@@ -109,4 +134,9 @@ export const saveSelectedDecks = createAction(
 
 export const saveUserDecks = createAction(
   '[Deck] Save User Decks'
+);
+
+export const updateDeck = createAction(
+  '[Deck] Update Deck',
+  props<{ deck: FlashcardDeck }>()
 );

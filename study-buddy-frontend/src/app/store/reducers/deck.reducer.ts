@@ -26,30 +26,51 @@ export const deckReducer = createReducer(
    */
   on(
     deckActions.addDecksToSelectedDecks,
-    (state, { decks }) => ({
-      ...state,
-      selectedDecks: state.selectedDecks.concat(decks)
-    })
+    (state, { decks }) => {
+      let deckIds: string[] = decks.map(deck => deck.deckId);
+      return {
+        ...state,
+        selectedDecks: decks.concat(
+          state.selectedDecks.filter(
+            sdeck => !deckIds.includes(sdeck.deckId)
+          )
+        )
+      };
+    }
   ),
   on(
     deckActions.addDecksToUserDecks,
-    (state, { decks }) => ({
-      ...state,
-      userDecks: state.userDecks.concat(decks)
-    })
+    deckActions.populateCardsUpdateDecksSuccessful,
+    (state, { decks }) => {
+      let deckIds: string[] = decks.map(deck => deck.deckId);
+      return {
+        ...state,
+        userDecks: decks.concat(
+          state.userDecks.filter(
+            udeck => !deckIds.includes(udeck.deckId)
+          )
+        )
+      };
+    }
   ),
   on(
     deckActions.addToSelectedDecks,
     (state, { deck }) => ({
       ...state,
-      selectedDecks: [...state.selectedDecks, deck]
+      selectedDecks: [
+        ...state.selectedDecks.filter(sdeck => sdeck.deckId != deck.deckId),
+        deck
+      ]
     })
   ),
   on(
     deckActions.addToUserDecks,
     (state, { deck }) => ({
       ...state,
-      userDecks: [...state.userDecks, deck]
+      userDecks: [
+        ...state.userDecks.filter(udeck => udeck.deckId != deck.deckId),
+        deck
+      ]
     })
   ),
   // Change Actions
@@ -75,17 +96,25 @@ export const deckReducer = createReducer(
   on(
     deckActions.changeUserDecks,
     (state, { decks }) => {
-      state.userDecks = decks;
-      let selectedDeckIds: string[] = state.selectedDecks.map(deck => deck.deckId);
-      state.selectedDecks = decks.filter(deck => selectedDeckIds.includes(deck.deckId));
-      for (let deck of decks) {
-        if (deck.deckId == state.activeDeck.deckId) {
-          state.activeDeck = deck;
-          return state;
+      let selectedDeckIds: string[] = state.selectedDecks.map(
+        deck => deck.deckId);
+      let selectedDecks: FlashcardDeck[] = decks.filter(
+        deck => selectedDeckIds.includes(deck.deckId));
+      let activeDeck: FlashcardDeck = null;
+      if (state.activeDeck) {
+        for (let deck of decks) {
+          if (deck.deckId == state.activeDeck.deckId) {
+            activeDeck = deck;
+            break;
+          }
         }
       }
-      state.activeDeck = null;
-      return state;
+      return {
+        ...state,
+        userDecks: decks,
+        selectedDecks: selectedDecks,
+        activeDeck: activeDeck
+      };
     }
   ),
   // Clear Actions
@@ -167,17 +196,64 @@ export const deckReducer = createReducer(
   on(
     deckActions.fetchUserDecksSuccessful,
     (state: DeckState, { userDecks }) => {
-      state.userDecks = userDecks;
+      console.log(userDecks);
       let selectedDeckIds: string[] = state.selectedDecks.map(deck => deck.deckId);
-      state.selectedDecks = userDecks.filter(udeck => selectedDeckIds.includes(udeck.deckId));
-      for (let udeck of userDecks) {
-        if (udeck.deckId == state.activeDeck.deckId) {
-          state.activeDeck = udeck;
-          return state;
+      let selectedDecks: FlashcardDeck[] = userDecks.filter(udeck => selectedDeckIds.includes(udeck.deckId));
+      let activeDeck: FlashcardDeck = null;
+      if (state.activeDeck) {
+        for (let udeck of userDecks) {
+          if (udeck.deckId == state.activeDeck.deckId) {
+            activeDeck = udeck;
+            break;
+          }
         }
       }
-      state.activeDeck = null;
-      return state;
+      return {
+        ...state,
+        userDecks: userDecks,
+        selectedDecks: selectedDecks,
+        activeDeck: activeDeck
+      };
+    }
+  ),
+  // Populate Actions
+  /*
+   * Populate card actions deal with the google api and take place
+   * mostly in effects in the google sheets api backend.
+   */
+  on(
+    deckActions.populateCardsUpdateDecks,
+    (state: DeckState, { decks }) => {
+      let deckIds: string[] = decks.map(deck => deck.deckId);
+      let unchangedUserDecks: FlashcardDeck[] = state.userDecks.filter(udeck => !deckIds.includes(udeck.deckId));
+      let selectedDeckIds: string[] = state.selectedDecks.map(sdeck => sdeck.deckId);
+      let newSelectedDecks: FlashcardDeck[] = [];
+      for (let deck of decks) {
+        if (selectedDeckIds.includes(deck.deckId)) {
+          newSelectedDecks.push(deck);
+        }
+      }
+      for (let unchUdeck of unchangedUserDecks) {
+        if (selectedDeckIds.includes(unchUdeck.deckId)) {
+          newSelectedDecks.push(unchUdeck);
+        }
+      }
+      // let unchangedSelectedDecks: FlashcardDeck[] = state.selectedDecks.filter(sdeck => !deckIds.includes(sdeck.deckId));
+      let newActiveDeck: FlashcardDeck = null;
+      if (state.activeDeck) {
+        for (let deck of decks) {
+          if (deck.deckId == state.activeDeck.deckId) {
+            newActiveDeck = deck;
+            break;
+          }
+        }
+      }
+      return {
+        ...state,
+        userDecks: unchangedUserDecks.concat(decks),
+        selectedDecks: newSelectedDecks,
+        activeDeck: newActiveDeck
+      }
     }
   ),
   // Remove Actions
@@ -214,7 +290,7 @@ export const deckReducer = createReducer(
       selectedDecks: state.selectedDecks.filter(
         (sDeck: FlashcardDeck) => sDeck.deckId != deck.deckId
       ),
-      activeDeck: state.activeDeck.deckId == deck.deckId ? null : state.activeDeck
+      activeDeck: state.activeDeck && state.activeDeck.deckId == deck.deckId ? null : state.activeDeck
     })
   ),
   on(
@@ -235,4 +311,20 @@ export const deckReducer = createReducer(
   /*
    * Save deck(s) actions will take place only in effects to update the backend.
    */
+  // Update Actions
+  /*
+   * The only update action so far only updates the frontend (use save to update 
+   * the backend).
+   */
+  on(
+    deckActions.updateDeck,
+    (state, { deck }) => ({
+      ...state,
+      userDeck: state.userDecks.map(
+        udeck => udeck.deckId == deck.deckId ? deck : udeck),
+      selectedDecks: state.selectedDecks.map(
+        sdeck => sdeck.deckId == deck.deckId ? deck : sdeck),
+      activeDeck: state.activeDeck && state.activeDeck.deckId == deck.deckId ? deck : state.activeDeck
+    })
+  )
 )

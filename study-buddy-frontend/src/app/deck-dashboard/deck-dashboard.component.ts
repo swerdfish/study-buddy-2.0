@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FlashcardDeck } from '../model/flashcard-deck';
 import { fromEvent, Observable } from 'rxjs';
 import { throttleTime, map, startWith } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import * as deckActions from '../store/actions/deck.actions';
   templateUrl: './deck-dashboard.component.html',
   styleUrls: ['./deck-dashboard.component.css']
 })
-export class DeckDashboardComponent implements OnInit {
+export class DeckDashboardComponent implements OnInit, AfterViewInit {
 
   getDeckState: Observable<DeckState>;
   decks: FlashcardDeck[];
@@ -38,7 +38,7 @@ export class DeckDashboardComponent implements OnInit {
     this.getDeckState.subscribe(state => {
       this.decks = state.userDecks;
       this.selectedDecks = state.selectedDecks;
-    })
+    });
 
     // Checks if screen size is less than 1024 pixels
     const checkScreenSize = () => document.body.offsetWidth;
@@ -53,6 +53,17 @@ export class DeckDashboardComponent implements OnInit {
     // Start off with the initial value use the isScreenSmall$ | async in the
     // view to get both the original value and the new value after resize.
     screenSizeChanged$.subscribe(screenSize => this.screenSize = screenSize)
+  }
+
+  ngAfterViewInit(): void {
+    // for (let deck of this.decks) {
+    //   if (!deck.cards || deck.cards.length == 0)
+    //     this.store.dispatch(deckActions.populateCardsForDeckId({ deckId: deck.deckId }));
+    // }
+  }
+
+  saveSelectedDecks() {
+    this.store.dispatch(deckActions.saveSelectedDecks());
   }
 
 }

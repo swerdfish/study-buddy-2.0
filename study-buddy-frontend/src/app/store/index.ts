@@ -30,6 +30,11 @@ export const selectToken = createSelector(
   (authState: auth.AuthState) => authState.token
 );
 
+export const selectLoggedIn = createSelector(
+  selectAuthState,
+  (authState: auth.AuthState) => authState.isLoggedIn
+);
+
 
 // Deck State Specific
 

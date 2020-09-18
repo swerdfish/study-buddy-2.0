@@ -52,7 +52,7 @@ export class ViewDeckGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSelectedDecks.subscribe(selectedDecks => {
-      this.compositeDeck = new CompositeDeck(selectedDecks);
+      this.compositeDeck = new CompositeDeck(selectedDecks, this.store);
       // Populate cards if not already populated
       if (this.compositeDeck.compCards.length == 0) this.refreshDeckGroup();
       // Start cardOrder in sequential order
@@ -64,10 +64,11 @@ export class ViewDeckGroupComponent implements OnInit {
     this.refresh = !this.refresh;
     this.getSelectedDecks.subscribe(selectedDecks => {
       for (let s = 0; s < selectedDecks.length; s++) {
-        selectedDecks[s].populateCards(true);
+        this.store.dispatch(deckActions.populateCardsForDeckId({ deckId: selectedDecks[s].deckId }));
+        // selectedDecks[s].populateCards(true);
       }
       console.log("new!");
-      this.compositeDeck = new CompositeDeck(selectedDecks);
+      this.compositeDeck = new CompositeDeck(selectedDecks, this.store);
       let difference = this.compositeDeck.compCards.length - this.cardOrder.length;
       if (difference < 0) {
         // the amount of cards shrunk, remove elements from cardOrder

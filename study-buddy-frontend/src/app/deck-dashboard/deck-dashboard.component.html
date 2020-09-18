@@ -10,13 +10,25 @@
             <div class="level-right">
                 <div class="level-item">
                     <div class="buttons">
-                        <button class="button is-info" [disabled]="selectedDecks.length==decks.length"
-                            (click)="selectOrClear=true">Select All</button>
+                        <button *ngIf="selectedDecks.length == 0" class="button is-info" (click)="selectOrClear=true">
+                            <i class="far fa-square"></i>
+                        </button>
+                        <button *ngIf="selectedDecks.length > 0" class="button is-info is-light"
+                            (click)="selectOrClear=false">
+                            <i class="far fa-check-square"></i>
+                        </button>
+                        <button [disabled]="selectedDecks.length==0" class="button is-link"
+                            (click)="saveSelectedDecks()">
+                            Save {{selectedDecks.length}} Selected {{selectedDecks.length==1 ? "Deck" : "Decks"}}
+                        </button>
+                        <!-- <button class="button is-info"
+                            [disabled]="selectedDecks.length==decks.length" (click)="selectOrClear=true">Select
+                            All</button>
                         <button class="button is-info is-light" [disabled]="selectedDecks.length==0"
-                            (click)="selectOrClear=false">Clear Selection</button>
+                            (click)="selectOrClear=false">Clear Selection</button> -->
                         <button class="button is-primary" routerLink="/view-group"
-                            [disabled]="selectedDecks.length < 1">View Deck
-                            Group ({{selectedDecks.length}} {{selectedDecks.length==1 ? "deck" : "decks"}})</button>
+                            [disabled]="selectedDecks.length < 1">View
+                            {{selectedDecks.length}} Selected {{selectedDecks.length==1 ? "Deck" : "Decks"}}</button>
                     </div>
                 </div>
             </div>

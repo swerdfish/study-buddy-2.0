@@ -1,14 +1,15 @@
 import { Flashcard } from './flashcard';
 import { SpreadsheetInfo } from './spreadsheet-info';
-import { GoogleApiService } from '../google-api.service';
+// import { GoogleApiService } from '../google-api.service';
 
 export class FlashcardDeck {
     deckId: string;
     spreadsheetInfo: SpreadsheetInfo;
     title: string;
     cards: Flashcard[];
+    color: string;
 
-    constructor(spreadsheetId: string, title: string, queCol: string, ansCol: string, private gserv: GoogleApiService, headerRows?: number, deckId?: string) {
+    constructor(spreadsheetId: string, title: string, queCol: string, ansCol: string, headerRows?: number, deckId?: string, color?: string) {
         if (deckId) {
             this.deckId = deckId;
         } else {
@@ -23,23 +24,24 @@ export class FlashcardDeck {
         };
         this.title = title;
         this.cards = [];
+        this.color = color && color.startsWith("#") && color.length == 7 ? color : "#FFFFFF"
     }
 
-    populateCards(overwrite?: boolean) {
-        this.gserv.getValues(this.spreadsheetInfo.spreadsheetId,
-            `'${this.title}'!${this.spreadsheetInfo.queCol}:${this.spreadsheetInfo.ansCol}`).subscribe(response => {
-                if (overwrite) this.cards = [];
-                if (this.spreadsheetInfo.queCol < this.spreadsheetInfo.ansCol) {
-                    for (let value of response.result.values.slice(this.spreadsheetInfo.headerRows)) {
-                        this.cards.push(new Flashcard(value[0], value[value.length - 1]));
-                    }
-                } else {
-                    for (let value of response.result.values.slice(this.spreadsheetInfo.headerRows)) {
-                        this.cards.push(new Flashcard(value[value.length - 1], value[0]));
-                    }
-                }
-            })
-    }
+    // populateCards(overwrite?: boolean) {
+    //     this.gserv.getValues(this.spreadsheetInfo.spreadsheetId,
+    //         `'${this.title}'!${this.spreadsheetInfo.queCol}:${this.spreadsheetInfo.ansCol}`).subscribe(response => {
+    //             if (overwrite) this.cards = [];
+    //             if (this.spreadsheetInfo.queCol < this.spreadsheetInfo.ansCol) {
+    //                 for (let value of response.result.values.slice(this.spreadsheetInfo.headerRows)) {
+    //                     this.cards.push(new Flashcard(value[0], value[value.length - 1]));
+    //                 }
+    //             } else {
+    //                 for (let value of response.result.values.slice(this.spreadsheetInfo.headerRows)) {
+    //                     this.cards.push(new Flashcard(value[value.length - 1], value[0]));
+    //                 }
+    //             }
+    //         })
+    // }
 
     hashCode(str: string): number {
         let hash = 0;

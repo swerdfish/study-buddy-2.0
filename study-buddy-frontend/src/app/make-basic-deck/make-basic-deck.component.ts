@@ -68,7 +68,7 @@ export class MakeBasicDeckComponent implements OnInit {
             // `'${title}'!${this.queCol}:${this.queCol}, '${title}'!${this.ansCol}:${this.ansCol}`).then(
             `'${title}'!${this.queCol}:${this.ansCol}`).then(
               resp => {
-                let deck = new FlashcardDeck(this.spreadsheetId, title, this.queCol, this.ansCol, this.gserv, this.headerRows);
+                let deck = new FlashcardDeck(this.spreadsheetId, title, this.queCol, this.ansCol, this.headerRows);
                 if (qThenA) {
                   for (let value of resp.result.values.slice(this.headerRows)) {
                     deck.cards.push(new Flashcard(value[0], value[value.length - 1]));

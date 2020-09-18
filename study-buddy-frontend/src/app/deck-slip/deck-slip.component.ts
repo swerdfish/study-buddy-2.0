@@ -3,7 +3,7 @@ import { FlashcardDeck } from '../model/flashcard-deck';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectSelectedDecks } from '../store';
+import { selectLoggedIn, selectSelectedDecks } from '../store';
 import * as deckActions from '../store/actions/deck.actions';
 
 @Component({
@@ -14,6 +14,10 @@ import * as deckActions from '../store/actions/deck.actions';
 export class DeckSlipComponent implements OnInit {
 
   getSelectedDecks: Observable<FlashcardDeck[]>;
+  getLoggedIn: Observable<boolean>;
+  isLoggedIn: boolean;
+  color: string;
+  blackOrWhite: boolean;
   @Input() deck: FlashcardDeck;
   @Input() // select is true, clear is false
   get selectOrClear(): boolean { return this._selectOrClear; }
@@ -29,10 +33,10 @@ export class DeckSlipComponent implements OnInit {
   checked: boolean;
 
   constructor(
-    // private deckserv: FlashcardDeckServiceDeprecated,
     private router: Router,
     private store: Store) {
     this.getSelectedDecks = this.store.select(selectSelectedDecks);
+    this.getLoggedIn = this.store.select(selectLoggedIn);
     this.refresh = false;
   }
 
@@ -49,6 +53,9 @@ export class DeckSlipComponent implements OnInit {
         }
       }
     });
+    this.getLoggedIn.subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn);
+    this.color = this.deck.color;
+    this.blackOrWhite = this.calcBlackOrWhite(this.color);
   }
 
   viewDeck() {
@@ -58,7 +65,11 @@ export class DeckSlipComponent implements OnInit {
 
   refreshDeck() {
     this.refresh = true;
-    this.deck.populateCards(true);
+    // this.deck.populateCards(true);
+    // console.log(this.deck.deckId);
+    this.store.dispatch(
+      deckActions.populateCardsForDeckId({ deckId: this.deck.deckId })
+    );
     this.refresh = false;
   }
 
@@ -73,6 +84,37 @@ export class DeckSlipComponent implements OnInit {
     } else {
       this.store.dispatch(deckActions.removeFromSelectedDecks({ deck: this.deck }));
     }
+  }
+
+  updateDeck() {
+    this.deck = {
+      ...this.deck,
+      color: this.color,
+      hashCode: this.deck.hashCode
+    }
+    this.store.dispatch(deckActions.updateDeck({ deck: this.deck }));
+    this.blackOrWhite = this.calcBlackOrWhite(this.deck.color);
+  }
+
+  calcBlackOrWhite(hexColor: string) {
+    let rgb = this.hexToRgb(hexColor);
+    if (rgb) {
+      let brightness = Math.round(
+        (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000
+      );
+      return brightness > 125;
+    } else {
+      return true;
+    }
+  }
+
+  hexToRgb(hex: string) {
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
   }
 
 }
