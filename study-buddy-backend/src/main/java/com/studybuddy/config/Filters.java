@@ -34,7 +34,7 @@ public class Filters {
 	    FilterRegistrationBean<FlashcardDeckFilter> filterRegistrationBean = new FilterRegistrationBean<FlashcardDeckFilter>();
 	    filterRegistrationBean.setFilter(this.fdFilt);
 	    filterRegistrationBean.setUrlPatterns(Arrays.asList("/flashcardDeck/*", "/flashcardDecks/*"));
-    return filterRegistrationBean;
+	    return filterRegistrationBean;
   }
 
 }

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 
@@ -30,6 +31,7 @@ public class AccessTokenProvider {
 		Date expDate = new Date(System.currentTimeMillis() + EXPIRATION_TIME_MILLISECONDS);
 		System.out.println(expDate.getTime());
 		lastExpiration = expDate.toInstant();
+		System.out.println(lastExpiration);
 		return Jwts.builder()
 				.setSubject(userId)
 			  	.setExpiration(expDate)
@@ -51,14 +53,15 @@ public class AccessTokenProvider {
 			      .getBody();
 			  final Instant expiration = body.getExpiration().toInstant();
 			  System.out.println(body.getExpiration().getTime());
-			  System.out.println("Token Expiration: "+expiration.toString());
-			  System.out.println("Last Token Expiration: "+lastExpiration.toString());
-			  if (expiration.isBefore(Instant.now()) || Math.abs(expiration.toEpochMilli() - lastExpiration.toEpochMilli()) > 1000) {
+			  System.out.println("Token Expiration: "+expiration.toEpochMilli());
+			  System.out.println("Last Token Expiration: "+lastExpiration.toEpochMilli());
+			  if (expiration.isBefore(Instant.now()) || lastExpiration==null || Math.abs(expiration.toEpochMilli() - lastExpiration.toEpochMilli()) > 1000) {
 			    return Optional.empty();
 			  }
+			  System.out.println(body.getSubject());
 			  return Optional.of(body.getSubject());
 			
-			} catch (SignatureException e) {
+			} catch (SignatureException | MalformedJwtException e) {
 			  // invalid signature
 			}
 		}

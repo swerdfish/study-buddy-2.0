@@ -41,7 +41,8 @@ public class FlashcardDeckFilter implements Filter {
 	    
 	    addAuthentication(response, userFromToken.get());
 	    request.setAttribute("userId", userFromToken.get());
-	    filterChain.doFilter(request, servletResponse);
+	    System.out.println("Thing1: "+(String) request.getAttribute("userId"));
+	    filterChain.doFilter(request, response);
 	  }
 	
 	@Override

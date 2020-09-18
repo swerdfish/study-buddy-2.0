@@ -65,7 +65,7 @@ public class FlashcardDeckRepoTests {
 	
 	@Test
 	public void testFlashcardDeckPojo() {
-		assertEquals(0, this.fd.getFdid());
+		assertEquals(0, this.fd.getDeckId());
 		assertEquals(this.deckUser, this.fd.getUser());
 		assertEquals(this.ssInfo, this.fd.getSpreadsheetInfo());
 		assertEquals("#FFFFFF", this.fd.getColor());

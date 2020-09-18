@@ -20,38 +20,59 @@ import org.springframework.web.bind.annotation.RestController;
 import com.studybuddy.exception.InvalidPermissionsException;
 import com.studybuddy.exception.ResourceNotFoundException;
 import com.studybuddy.model.FlashcardDeck;
+import com.studybuddy.model.FlashcardDeckHandler;
+import com.studybuddy.model.User;
 import com.studybuddy.service.FlashcardDeckService;
 import com.studybuddy.service.SpreadsheetInfoService;
+import com.studybuddy.service.UserService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(exposedHeaders = {"Authorization"})
 public class FlashcardDeckController {
 	
 	private FlashcardDeckService fds;
 	private SpreadsheetInfoService ssis;
+	private UserService usrs;
 	
 	@Autowired
-	public FlashcardDeckController(FlashcardDeckService fds, SpreadsheetInfoService ssis) {
+	public FlashcardDeckController(
+			FlashcardDeckService fds,
+			SpreadsheetInfoService ssis,
+			UserService usrs) {
 		this.fds = fds;
 		this.ssis = ssis;
+		this.usrs = usrs;
 	}
 	
 	// CREATE
 	
 	@PostMapping("/flashcardDeck")
-	public FlashcardDeck createFlashcardDeck(@RequestBody FlashcardDeck fDeck, HttpServletResponse response) {
+	public FlashcardDeck createFlashcardDeck(@RequestBody FlashcardDeckHandler fDeckHandler, HttpServletRequest request, HttpServletResponse response) {
+		FlashcardDeck fDeck = new FlashcardDeck(-1, fDeckHandler.getUser(), fDeckHandler.getSpreadsheetInfo(), fDeckHandler.getColor(), fDeckHandler.getTitle());
 		if (!this.ssis.existsSpreadsheetInfoBySpreadsheetId(
 				fDeck.getSpreadsheetInfo().getSpreadsheetId())) {
 			ssis.createSpreadsheetInfo(fDeck.getSpreadsheetInfo());
 		}
+		User loggedInUser = this.usrs.findByUserId((String) request.getAttribute("userId"));
+		if (loggedInUser==null) {
+			throw new ResourceNotFoundException("Could not find logged in user.");
+		}
+		fDeck.setUser(loggedInUser);
 		response.setStatus(HttpStatus.CREATED.value());
 		return fds.createFlashcardDeck(fDeck);
 	}
 	
 	@PostMapping("/flashcardDecks")
-	public List<FlashcardDeck> createFlashcardDecks(@RequestBody List<FlashcardDeck> fDecks, HttpServletResponse response) {
+	public List<FlashcardDeck> createFlashcardDecks(@RequestBody List<FlashcardDeckHandler> fDeckHandlers, HttpServletRequest request, HttpServletResponse response) {
+		String uid = (String) request.getAttribute("userId");
+		System.out.println("Thing2: "+uid);
+		User loggedInUser = this.usrs.findByUserId(uid);
+		if (loggedInUser==null) {
+			throw new ResourceNotFoundException("Could not find logged in user.");
+		}
 		List<FlashcardDeck> createdDecks = new ArrayList<>();
-		for (FlashcardDeck fDeck : fDecks) {
+		for (FlashcardDeckHandler fDeckHandler : fDeckHandlers) {
+			FlashcardDeck fDeck = new FlashcardDeck(-1, loggedInUser, fDeckHandler.getSpreadsheetInfo(), fDeckHandler.getColor(), fDeckHandler.getTitle());
 			if (!this.ssis.existsSpreadsheetInfoBySpreadsheetId(
 					fDeck.getSpreadsheetInfo().getSpreadsheetId())) {
 				ssis.createSpreadsheetInfo(fDeck.getSpreadsheetInfo());
@@ -60,23 +81,23 @@ public class FlashcardDeckController {
 			createdDecks.add(createdDeck);
 		}
 		response.setStatus(HttpStatus.CREATED.value());
-		return fds.createFlashcardDecks(fDecks);
+		return createdDecks;
 	}
 	
 	// READ
 	
-	@GetMapping("/flashcardDeck/{fdid}")
-	public FlashcardDeck getFlashcardDeckByFdid(@PathVariable int fdid, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		FlashcardDeck fDeck = fds.getFlashcardDeckByFdid(fdid);
+	@GetMapping("/flashcardDeck/{deckId}")
+	public FlashcardDeck getFlashcardDeckByFdid(@PathVariable int deckId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		FlashcardDeck fDeck = fds.getFlashcardDeckByFdid(deckId);
 		if (fDeck == null) {
-			response.sendError(404, "No flashcard deck found with id "+fdid);
+			response.sendError(404, "No flashcard deck found with id "+deckId);
 			return null;
 		}
 		String userId = (String) request.getAttribute("userId");
 		System.out.println(userId);
 		if (!fDeck.getUser().getUid().equals((String) request.getAttribute("userId"))) {
 			throw new InvalidPermissionsException(
-					"Logged in user cannot access flashcard deck "+fdid);
+					"Logged in user cannot access flashcard deck "+deckId);
 		}
 		return fDeck;
 	}
@@ -99,11 +120,11 @@ public class FlashcardDeckController {
 	
 	@PutMapping("/flashcardDeck")
 	public FlashcardDeck updateFlashcardDeck(@RequestBody FlashcardDeck fDeck, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		int fdid = fDeck.getFdid();
+		int fdid = fDeck.getDeckId();
 		String userId = (String) request.getAttribute("userId");
 		if (!this.fds.existsByFdid(fdid)) {
 			throw new ResourceNotFoundException(
-					"UPDATE ABORTED: Could not find deck with id "+fDeck.getFdid()+" to update. Consider creating it instead.");
+					"UPDATE ABORTED: Could not find deck with id "+fDeck.getDeckId()+" to update. Consider creating it instead.");
 		}
 		if (this.fds.getFlashcardDeckByFdid(fdid).getUser().getUid() != userId) {
 			throw new InvalidPermissionsException(
@@ -121,10 +142,10 @@ public class FlashcardDeckController {
 		List<FlashcardDeck> decksToUpdate = new ArrayList<>();
 		String userId = (String) request.getAttribute("userId");
 		for (FlashcardDeck fDeck : fDecks) {
-			int fdid = fDeck.getFdid();
+			int fdid = fDeck.getDeckId();
 			if (!this.fds.existsByFdid(fdid)) {
 				throw new ResourceNotFoundException(
-						"UPDATE ABORTED: Could not find deck with id "+fDeck.getFdid()+" to update. Consider creating it instead. No decks were updated.");
+						"UPDATE ABORTED: Could not find deck with id "+fDeck.getDeckId()+" to update. Consider creating it instead. No decks were updated.");
 			}
 			if (this.fds.getFlashcardDeckByFdid(fdid).getUser().getUid() != userId) {
 				throw new InvalidPermissionsException(
