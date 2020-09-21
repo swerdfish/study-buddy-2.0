@@ -15,17 +15,21 @@
                 </button>
 
                 <div style="width: 100%">
-                    <div class="card">
+                    <div class="card"
+                        [ngStyle]="{'background-color': compositeDeck.compCards[cardOrder[currentCardIndex]].color}">
                         <!--; background-color: red;">-->
                         <a (click)="flipCard()">
                             <header class="card-header">
-                                <p class="title is-5">{{compositeDeck.compCards[cardOrder[currentCardIndex]].title}}</p>
+                                <p [ngClass]="blackOrWhite ? 'title is-5' : 'title is-5 has-text-light'">
+                                    {{compositeDeck.compCards[cardOrder[currentCardIndex]].title}}</p>
                             </header>
                             <div class="card-content">
-                                <p class="title" *ngIf="compositeDeck.compCards.length && showQuestion">
+                                <p [ngClass]="blackOrWhite ? 'title' : 'title has-text-light'"
+                                    *ngIf="compositeDeck.compCards.length && showQuestion">
                                     {{compositeDeck.compCards[cardOrder[currentCardIndex]].question}}
                                 </p>
-                                <p class="subtitle" *ngIf="compositeDeck.compCards.length && !showQuestion">
+                                <p [ngClass]="blackOrWhite ? 'subtitle' : 'subtitle has-text-grey-lighter'"
+                                    *ngIf="compositeDeck.compCards.length && !showQuestion">
                                     {{compositeDeck.compCards[cardOrder[currentCardIndex]].answer}}
                                 </p>
                             </div>

@@ -27,7 +27,7 @@ import com.studybuddy.service.SpreadsheetInfoService;
 import com.studybuddy.service.UserService;
 
 @RestController
-@CrossOrigin(exposedHeaders = {"Authorization"})
+@CrossOrigin(origins = "*", exposedHeaders = {"Authorization"})
 public class FlashcardDeckController {
 	
 	private FlashcardDeckService fds;

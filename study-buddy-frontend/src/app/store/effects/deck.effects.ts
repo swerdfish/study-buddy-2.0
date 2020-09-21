@@ -49,18 +49,20 @@ export class DeckEffects {
     ))
   ));
 
-  deleteDeck$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(deckActions.deleteDeck),
-    withLatestFrom(this.store$.select(selectToken)),
-    switchMap(([{ deck }, token]) => {
-      let deckIdToRemove: number = +deck.deckId;
-      if (deckIdToRemove !== 0 && !deckIdToRemove) deckIdToRemove = 0;
-      return this.fdserv.deleteFlashcardDeckById(deckIdToRemove, token);
-    }),
-    map((response: HttpResponse<void>) => new authActions.SetAccessToken(
-      { token: response.headers.get("Authorization").split(" ")[1] }
-    ))
-  ));
+  // deleteDeck$: Observable<Action> = createEffect(() => this.actions$.pipe(
+  //   ofType(deckActions.deleteDeck),
+  //   withLatestFrom(this.store$.select(selectToken)),
+  //   switchMap(([{ deck }, token]) => {
+  //     console.log(deck);
+  //     let deckIdToRemove: number = +deck.deckId;
+  //     if (deckIdToRemove !== 0 && !deckIdToRemove) deckIdToRemove = 0;
+  //     console.log(deckIdToRemove);
+  //     return this.fdserv.deleteFlashcardDeckById(deckIdToRemove, token);
+  //   }),
+  //   map((response: HttpResponse<void>) => new authActions.SetAccessToken(
+  //     { token: response.headers.get("Authorization").split(" ")[1] }
+  //   ))
+  // ));
 
   deleteDeckById$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(deckActions.deleteDeckById),
@@ -171,7 +173,7 @@ export class DeckEffects {
                   console.log(sheet.data);
                   for (let gridData of sheet.data) {
                     for (let row of gridData.rowData.slice(deck.spreadsheetInfo.headerRows)) {
-                      console.log(row.values);
+                      // console.log(row.values);
                       let qIndex: number = this.colStringToIndex(deck.spreadsheetInfo.queCol);
                       if (!row.values[qIndex].userEnteredValue) break;
                       let aIndex: number = this.colStringToIndex(deck.spreadsheetInfo.ansCol);

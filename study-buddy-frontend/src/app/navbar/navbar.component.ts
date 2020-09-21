@@ -7,6 +7,7 @@ import { AuthState } from '../store/reducers/auth.reducer';
 import * as credKey from '../../../../../sheets-cred-key_studyBuddy.json'
 import { GoogleLogin, GoogleRegister, GoogleLogout } from '../store/actions/auth.actions';
 import * as deckActions from '../store/actions/deck.actions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -33,6 +34,7 @@ export class NavbarComponent implements OnInit {
   }
 
   constructor(
+    private router: Router,
     private store: Store) {
     this.open = false;
     this.openCloseBurgerUsed = false;
@@ -64,6 +66,7 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.store.dispatch(new GoogleLogout(null));
     this.store.dispatch(deckActions.clearAllDecks());
+    this.router.navigateByUrl("/home");
   }
 
 }

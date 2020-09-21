@@ -162,6 +162,18 @@ export const deckReducer = createReducer(
   ),
   // deckActions.deleteDeck state update: see removeFromUserDecks
   on(
+    deckActions.deleteDeck,
+    (state: DeckState, { deck }) => {
+      console.log(deck);
+      return {
+        ...state,
+        userDecks: state.userDecks.filter(udeck => udeck.deckId != deck.deckId),
+        selectedDecks: state.selectedDecks.filter(sdeck => sdeck.deckId != deck.deckId),
+        activeDeck: state.activeDeck && state.activeDeck.deckId == deck.deckId ? null : state.activeDeck
+      }
+    }
+  ),
+  on(
     deckActions.deleteDeckById,
     (state: DeckState, { deckId }) => ({
       ...state,

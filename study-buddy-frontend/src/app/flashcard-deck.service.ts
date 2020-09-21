@@ -116,6 +116,7 @@ export class FlashcardDeckService {
   // DELETE
 
   deleteFlashcardDeckById(deckId: number, token: string): Observable<HttpResponse<void>> {
+    console.log(deckId);
     return this.http.delete<void>(
       this.baseUrl + `flashcardDeck/${deckId}`,
       {

@@ -18,7 +18,7 @@ import com.studybuddy.model.User;
 import com.studybuddy.service.UserService;
 
 @RestController
-@CrossOrigin(exposedHeaders = {"Authorization"})
+@CrossOrigin(origins = "*", exposedHeaders = {"Authorization"})
 public class UserController {
 	
 	private UserService userServ;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { FlashcardDeck } from '../model/flashcard-deck';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -7,6 +7,7 @@ import { selectDeckState, selectLoggedIn, selectSelectedDecks } from '../store';
 import * as deckActions from '../store/actions/deck.actions';
 import { Utilities } from '../utilities';
 import { DeckState } from '../store/reducers/deck.reducer';
+import { EventEmitter } from 'protractor';
 
 @Component({
   selector: 'app-deck-slip',
@@ -34,6 +35,8 @@ export class DeckSlipComponent implements OnInit {
   @Input() screenSize: number;
   refresh: boolean;
   checked: boolean;
+
+  // @Output() close = new EventEmitter();
 
   constructor(
     private router: Router,
@@ -90,7 +93,9 @@ export class DeckSlipComponent implements OnInit {
   }
 
   deleteDeck() {
-    this.store.dispatch(deckActions.deleteDeck({ deck: this.deck }))
+    console.log(this.deck);
+    this.store.dispatch(deckActions.deleteDeck({ deck: this.deck }));
+    // this.close.emit(null);
   }
 
   checkbox() {
@@ -117,7 +122,7 @@ export class DeckSlipComponent implements OnInit {
         this.checked ?
           `inset 5px 5px 15px ${this.blackOrWhite ? '#00000027' : '#FFFFFF27'}, inset -5px -5px 15px ${this.blackOrWhite ? '#00000027' : '#FFFFFF27'};` :
           '5px 5px 10px #00000027',
-      'outline': `${this.checked ? this.deck.color + ' solid 3px' : ''}`,
+      'outline': `${this.checked ? "#363636" + ' solid 3px' : ''}`,
       'outline-offset': `${this.checked ? '2px' : ''}`
     }
     return slipStyles;
