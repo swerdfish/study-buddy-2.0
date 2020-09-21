@@ -1,8 +1,8 @@
-<div class="card">
-    <div [ngClass]="checked ? 'card-content has-background-grey-lighter': 'card-content'" (click)="checkbox()"
-        [ngStyle]="{'background-color': deck.color}">
+<div card="card" [ngStyle]="getSlipStyles()">
+    <!-- {'background-color': deck.color, 'box-shadow': '5px 5px 10px #00000027'} -->
+    <div class="card-content" (click)="checkbox()">
         <div class="card-header-icon" style="float: right">
-            <span class="icon">
+            <span [ngClass]="blackOrWhite ? 'icon' : 'icon has-text-light'">
                 <i *ngIf="!checked" class="far fa-square fa-lg"></i>
                 <i *ngIf="checked" class="far fa-check-square fa-lg"></i>
             </span>
@@ -14,15 +14,14 @@
         <p [ngClass]="blackOrWhite ? 'subtitle' : 'subtitle has-text-grey-light'">
             {{deck.cards ? deck.cards.length : "loading"}} cards</p>
     </div>
-    <footer [ngClass]="checked ? 'card-footer has-background-grey-lighter' : 'card-footer'"
-        [ngStyle]="{'background-color': deck.color}">
+    <footer class="card-footer">
         <div class="card-footer-item">
             <button class="button is-primary" (click)="viewDeck()">
                 <i class="fas fa-folder-open"></i>
             </button>
         </div>
         <div *ngIf="isLoggedIn" class="card-footer-item">
-            <input id="colorPicker" type="color" [(ngModel)]="color" (change)="updateDeck()">
+            <input id="colorPicker" type="color" [(ngModel)]="color" (change)="updateDeckColor()">
         </div>
         <div class="card-footer-item">
             <button *ngIf="!refresh" class="button is-info" (click)="refreshDeck()">

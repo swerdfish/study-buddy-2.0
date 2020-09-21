@@ -3,8 +3,10 @@ import { FlashcardDeck } from '../model/flashcard-deck';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectLoggedIn, selectSelectedDecks } from '../store';
+import { selectDeckState, selectLoggedIn, selectSelectedDecks } from '../store';
 import * as deckActions from '../store/actions/deck.actions';
+import { Utilities } from '../utilities';
+import { DeckState } from '../store/reducers/deck.reducer';
 
 @Component({
   selector: 'app-deck-slip',
@@ -13,7 +15,8 @@ import * as deckActions from '../store/actions/deck.actions';
 })
 export class DeckSlipComponent implements OnInit {
 
-  getSelectedDecks: Observable<FlashcardDeck[]>;
+  // getSelectedDecks: Observable<FlashcardDeck[]>;
+  getDeckState: Observable<DeckState>;
   getLoggedIn: Observable<boolean>;
   isLoggedIn: boolean;
   color: string;
@@ -35,14 +38,17 @@ export class DeckSlipComponent implements OnInit {
   constructor(
     private router: Router,
     private store: Store) {
-    this.getSelectedDecks = this.store.select(selectSelectedDecks);
+    // this.getSelectedDecks = this.store.select(selectSelectedDecks);
+    this.getDeckState = this.store.select(selectDeckState);
     this.getLoggedIn = this.store.select(selectLoggedIn);
     this.refresh = false;
   }
 
   ngOnInit(): void {
     this.checked = false;
-    this.getSelectedDecks.subscribe(selectedDecks => {
+    // this.getSelectedDecks.subscribe(selectedDecks => {
+    this.getDeckState.subscribe(deckState => {
+      let selectedDecks = deckState.selectedDecks;
       this.checked = false;
       if (selectedDecks && selectedDecks.length > 0) {
         for (let sdeck of selectedDecks) {
@@ -52,10 +58,20 @@ export class DeckSlipComponent implements OnInit {
           }
         }
       }
+      for (let udeck of deckState.userDecks) {
+        if (this.deck.deckId == udeck.deckId) {
+          let temp: FlashcardDeck = new FlashcardDeck(udeck.spreadsheetInfo.spreadsheetId, udeck.title, udeck.spreadsheetInfo.queCol, udeck.spreadsheetInfo.ansCol, udeck.spreadsheetInfo.headerRows, udeck.deckId, udeck.color);
+          temp.cards = udeck.cards;
+          this.deck = temp;
+          this.color = udeck.color;
+          this.blackOrWhite = Utilities.calcBlackOrWhite(this.color);
+          break;
+        }
+      }
     });
     this.getLoggedIn.subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn);
     this.color = this.deck.color;
-    this.blackOrWhite = this.calcBlackOrWhite(this.color);
+    this.blackOrWhite = Utilities.calcBlackOrWhite(this.color);
   }
 
   viewDeck() {
@@ -86,35 +102,25 @@ export class DeckSlipComponent implements OnInit {
     }
   }
 
-  updateDeck() {
-    this.deck = {
-      ...this.deck,
-      color: this.color,
-      hashCode: this.deck.hashCode
-    }
+  updateDeckColor() {
+    let temp: FlashcardDeck = new FlashcardDeck(this.deck.spreadsheetInfo.spreadsheetId, this.deck.title, this.deck.spreadsheetInfo.queCol, this.deck.spreadsheetInfo.ansCol, this.deck.spreadsheetInfo.headerRows, this.deck.deckId, this.color);
+    temp.cards = this.deck.cards;
+    this.deck = temp;
     this.store.dispatch(deckActions.updateDeck({ deck: this.deck }));
-    this.blackOrWhite = this.calcBlackOrWhite(this.deck.color);
+    this.blackOrWhite = Utilities.calcBlackOrWhite(this.deck.color);
   }
 
-  calcBlackOrWhite(hexColor: string) {
-    let rgb = this.hexToRgb(hexColor);
-    if (rgb) {
-      let brightness = Math.round(
-        (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000
-      );
-      return brightness > 125;
-    } else {
-      return true;
+  getSlipStyles() {
+    let slipStyles = {
+      'background-color': this.deck.color,
+      'box-shadow':
+        this.checked ?
+          `inset 5px 5px 15px ${this.blackOrWhite ? '#00000027' : '#FFFFFF27'}, inset -5px -5px 15px ${this.blackOrWhite ? '#00000027' : '#FFFFFF27'};` :
+          '5px 5px 10px #00000027',
+      'outline': `${this.checked ? this.deck.color + ' solid 3px' : ''}`,
+      'outline-offset': `${this.checked ? '2px' : ''}`
     }
-  }
-
-  hexToRgb(hex: string) {
-    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
+    return slipStyles;
   }
 
 }

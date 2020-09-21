@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectSelectedDecks } from '../store';
 import * as deckActions from '../store/actions/deck.actions';
+import { Utilities } from '../utilities';
 
 @Component({
   selector: 'app-view-deck-group',
@@ -19,6 +20,7 @@ export class ViewDeckGroupComponent implements OnInit {
   showQuestion: boolean;
   refresh: boolean;
   cardOrder: number[];
+  blackOrWhite: boolean;
 
   constructor(private store: Store) {
     this.currentCardIndex = 0;
@@ -40,6 +42,7 @@ export class ViewDeckGroupComponent implements OnInit {
     if (++this.currentCardIndex >= this.compositeDeck.compCards.length) {
       this.currentCardIndex -= this.compositeDeck.compCards.length;
     }
+    this.blackOrWhite = Utilities.calcBlackOrWhite(this.compositeDeck.compCards[this.cardOrder[this.currentCardIndex]].color);
     this.showQuestion = true;
   }
 
@@ -47,17 +50,19 @@ export class ViewDeckGroupComponent implements OnInit {
     if (--this.currentCardIndex < 0) {
       this.currentCardIndex += this.compositeDeck.compCards.length;
     }
+    this.blackOrWhite = Utilities.calcBlackOrWhite(this.compositeDeck.compCards[this.cardOrder[this.currentCardIndex]].color);
     this.showQuestion = true;
   }
 
   ngOnInit(): void {
     this.getSelectedDecks.subscribe(selectedDecks => {
-      this.compositeDeck = new CompositeDeck(selectedDecks, this.store);
+      this.compositeDeck = new CompositeDeck(selectedDecks);
       // Populate cards if not already populated
       if (this.compositeDeck.compCards.length == 0) this.refreshDeckGroup();
       // Start cardOrder in sequential order
       this.cardOrder = [...Array(this.compositeDeck.compCards.length).keys()];
-    })
+      this.blackOrWhite = Utilities.calcBlackOrWhite(this.compositeDeck.compCards[this.cardOrder[this.currentCardIndex]].color);
+    });
   }
 
   refreshDeckGroup(): void {
@@ -68,7 +73,7 @@ export class ViewDeckGroupComponent implements OnInit {
         // selectedDecks[s].populateCards(true);
       }
       console.log("new!");
-      this.compositeDeck = new CompositeDeck(selectedDecks, this.store);
+      this.compositeDeck = new CompositeDeck(selectedDecks);
       let difference = this.compositeDeck.compCards.length - this.cardOrder.length;
       if (difference < 0) {
         // the amount of cards shrunk, remove elements from cardOrder
@@ -109,11 +114,13 @@ export class ViewDeckGroupComponent implements OnInit {
 
   shuffleCards(): void {
     this.shuffle(this.cardOrder);
+    this.blackOrWhite = Utilities.calcBlackOrWhite(this.compositeDeck.compCards[this.cardOrder[this.currentCardIndex]].color);
     this.showQuestion = true;
   }
 
   unshuffleCards(): void {
     this.cardOrder = [...Array(this.compositeDeck.compCards.length).keys()];
+    this.blackOrWhite = Utilities.calcBlackOrWhite(this.compositeDeck.compCards[this.cardOrder[this.currentCardIndex]].color);
     this.showQuestion = true;
   }
 

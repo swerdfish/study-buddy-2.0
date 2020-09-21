@@ -1,21 +1,18 @@
-import { Store } from '@ngrx/store';
 import { CompositeCard } from './composite-card.model';
 import { FlashcardDeck } from './flashcard-deck';
-import * as deckActions from '../store/actions/deck.actions';
 
 export class CompositeDeck {
     compDeckId: string;
     deckIds: string[];
     compCards: CompositeCard[];
 
-    constructor(decks: FlashcardDeck[], private store: Store, compDeckId?: string) {
+    constructor(decks: FlashcardDeck[], compDeckId?: string) {
         this.deckIds = [];
         this.compCards = [];
         for (let deck of decks) {
             this.deckIds.push(deck.deckId);
-            if (deck.cards.length == 0) store.dispatch(deckActions.populateCardsForDeckId({ deckId: deck.deckId }));//deck.populateCards();
             for (let card of deck.cards) {
-                this.compCards.push(new CompositeCard(card.question, card.answer, deck.title, deck.deckId));
+                this.compCards.push(new CompositeCard(card.question, card.answer, deck.title, deck.color, deck.deckId));
             }
         }
         if (compDeckId) this.compDeckId = compDeckId;

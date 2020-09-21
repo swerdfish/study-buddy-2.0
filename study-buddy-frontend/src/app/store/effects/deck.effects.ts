@@ -18,8 +18,7 @@ import { FlashcardDeck } from 'src/app/model/flashcard-deck';
 import { HttpResponse } from '@angular/common/http';
 import { GoogleApiService } from 'src/app/google-api.service';
 import { Flashcard } from 'src/app/model/flashcard';
-import { Router } from '@angular/router';
-import { SpreadsheetInfo } from 'src/app/model/spreadsheet-info';
+// import { Router } from '@angular/router';
 
 
 
@@ -30,7 +29,7 @@ export class DeckEffects {
     private actions$: Actions,
     private fdserv: FlashcardDeckService,
     private gserv: GoogleApiService,
-    private router: Router,
+    // private router: Router,
     private store$: Store<AppState>) { }
 
   deleteActiveDeck$: Observable<Action> = createEffect(() => this.actions$.pipe(

@@ -36,58 +36,58 @@
         <div *ngIf="screenSize > 1700" class="columns is-multiline">
             <div class="column">
                 <div *ngFor="let deck of decks; let i = index">
-                    <app-deck-slip *ngIf="i % 4 == 0" [deck]=deck [screenSize]=screenSize></app-deck-slip>
+                    <app-deck-slip *ngIf="i % 4 == 0" [deck]="deck" [screenSize]=screenSize></app-deck-slip>
                 </div>
             </div>
             <div class="column">
                 <div *ngFor="let deck of decks; let i = index">
-                    <app-deck-slip *ngIf="i % 4 == 1" [deck]=deck [screenSize]=screenSize></app-deck-slip>
+                    <app-deck-slip *ngIf="i % 4 == 1" [deck]="deck" [screenSize]=screenSize></app-deck-slip>
                 </div>
             </div>
             <div class="column">
                 <div *ngFor="let deck of decks; let i = index">
-                    <app-deck-slip *ngIf="i % 4 == 2" [deck]=deck [screenSize]=screenSize></app-deck-slip>
+                    <app-deck-slip *ngIf="i % 4 == 2" [deck]="deck" [screenSize]=screenSize></app-deck-slip>
                 </div>
             </div>
             <div class="column">
                 <div *ngFor="let deck of decks; let i = index">
-                    <app-deck-slip *ngIf="i % 4 == 3" [deck]=deck [screenSize]=screenSize></app-deck-slip>
+                    <app-deck-slip *ngIf="i % 4 == 3" [deck]="deck" [screenSize]=screenSize></app-deck-slip>
                 </div>
             </div>
         </div>
         <div *ngIf="screenSize > 1300 && screenSize <= 1700" class="columns is-multiline">
             <div class="column">
                 <div *ngFor="let deck of decks; let i = index">
-                    <app-deck-slip *ngIf="i % 3 == 0" [deck]=deck [screenSize]=screenSize></app-deck-slip>
+                    <app-deck-slip *ngIf="i % 3 == 0" [deck]="deck" [screenSize]=screenSize></app-deck-slip>
                 </div>
             </div>
             <div class="column">
                 <div *ngFor="let deck of decks; let i = index">
-                    <app-deck-slip *ngIf="i % 3 == 1" [deck]=deck [screenSize]=screenSize></app-deck-slip>
+                    <app-deck-slip *ngIf="i % 3 == 1" [deck]="deck" [screenSize]=screenSize></app-deck-slip>
                 </div>
             </div>
             <div class="column">
                 <div *ngFor="let deck of decks; let i = index">
-                    <app-deck-slip *ngIf="i % 3 == 2" [deck]=deck [screenSize]=screenSize></app-deck-slip>
+                    <app-deck-slip *ngIf="i % 3 == 2" [deck]="deck" [screenSize]=screenSize></app-deck-slip>
                 </div>
             </div>
         </div>
         <div *ngIf="screenSize > 876 && screenSize <= 1300" class="columns is-multiline">
             <div class="column">
                 <div *ngFor="let deck of decks; let i = index">
-                    <app-deck-slip *ngIf="i % 2 == 0" [deck]=deck [screenSize]=screenSize></app-deck-slip>
+                    <app-deck-slip *ngIf="i % 2 == 0" [deck]="deck" [screenSize]=screenSize></app-deck-slip>
                 </div>
             </div>
             <div class="column">
                 <div *ngFor="let deck of decks; let i = index">
-                    <app-deck-slip *ngIf="i % 2 == 1" [deck]=deck [screenSize]=screenSize></app-deck-slip>
+                    <app-deck-slip *ngIf="i % 2 == 1" [deck]="deck" [screenSize]=screenSize></app-deck-slip>
                 </div>
             </div>
         </div>
         <div *ngIf="screenSize <= 876" class="columns is-multiline">
             <div class="column">
                 <div *ngFor="let deck of decks; let i = index">
-                    <app-deck-slip [deck]=deck [screenSize]=screenSize></app-deck-slip>
+                    <app-deck-slip [deck]="deck" [screenSize]=screenSize></app-deck-slip>
                 </div>
             </div>
         </div>

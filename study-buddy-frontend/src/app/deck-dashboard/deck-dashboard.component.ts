@@ -36,6 +36,7 @@ export class DeckDashboardComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getDeckState.subscribe(state => {
+      console.log(state);
       this.decks = state.userDecks;
       this.selectedDecks = state.selectedDecks;
     });

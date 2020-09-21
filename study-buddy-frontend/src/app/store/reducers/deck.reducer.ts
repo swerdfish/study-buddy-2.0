@@ -318,13 +318,20 @@ export const deckReducer = createReducer(
    */
   on(
     deckActions.updateDeck,
-    (state, { deck }) => ({
-      ...state,
-      userDeck: state.userDecks.map(
-        udeck => udeck.deckId == deck.deckId ? deck : udeck),
-      selectedDecks: state.selectedDecks.map(
-        sdeck => sdeck.deckId == deck.deckId ? deck : sdeck),
-      activeDeck: state.activeDeck && state.activeDeck.deckId == deck.deckId ? deck : state.activeDeck
-    })
+    (state, { deck }) => {
+      let sanitizedDeck = new FlashcardDeck(deck.spreadsheetInfo.spreadsheetId, deck.title, deck.spreadsheetInfo.queCol, deck.spreadsheetInfo.ansCol, deck.spreadsheetInfo.headerRows, deck.deckId, deck.color);
+      sanitizedDeck.cards = [...deck.cards];
+      console.log(deck);
+      console.log(state.userDecks.map(
+        udeck => udeck.deckId == deck.deckId ? sanitizedDeck : udeck));
+      return {
+        ...state,
+        userDecks: state.userDecks.map(
+          udeck => udeck.deckId == deck.deckId ? sanitizedDeck : udeck),
+        selectedDecks: state.selectedDecks.map(
+          sdeck => sdeck.deckId == deck.deckId ? sanitizedDeck : sdeck),
+        activeDeck: state.activeDeck && state.activeDeck.deckId == deck.deckId ? sanitizedDeck : state.activeDeck
+      };
+    }
   )
 )
