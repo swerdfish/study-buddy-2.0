@@ -33,9 +33,13 @@ export class ViewDeckComponent implements OnInit {
     this.getActiveDeck.subscribe(activeDeck => {
       this.deck = activeDeck;
       // Populate cards if not already populated
-      if (this.deck.cards.length == 0) this.store.dispatch(deckActions.populateCardsForDeckId({ deckId: this.deck.deckId }));//this.deck.populateCards(true);
-      // Start cardOrder in sequential order
-      this.cardOrder = [...Array(this.deck.cards.length).keys()];
+      if (this.deck) {
+        if (this.deck.cards.length == 0) this.store.dispatch(deckActions.populateCardsForDeckId({ deckId: this.deck.deckId }));//this.deck.populateCards(true);
+        // Start cardOrder in sequential order
+        this.cardOrder = [...Array(this.deck.cards.length).keys()];
+      } else {
+        this.cardOrder = [];
+      }
     })
   }
 

@@ -34,6 +34,9 @@ export class DeckDashboardComponent implements OnInit, AfterViewInit {
     this.getDeckState = this.store.select(selectDeckState);
   }
 
+  closeDeckSlip(deckId: string) {
+  }
+
   ngOnInit(): void {
     this.getDeckState.subscribe(state => {
       console.log(state);

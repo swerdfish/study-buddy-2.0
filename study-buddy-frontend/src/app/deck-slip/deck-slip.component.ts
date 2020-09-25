@@ -1,13 +1,12 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FlashcardDeck } from '../model/flashcard-deck';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectDeckState, selectLoggedIn, selectSelectedDecks } from '../store';
+import { selectDeckState, selectLoggedIn } from '../store';
 import * as deckActions from '../store/actions/deck.actions';
 import { Utilities } from '../utilities';
 import { DeckState } from '../store/reducers/deck.reducer';
-import { EventEmitter } from 'protractor';
 
 @Component({
   selector: 'app-deck-slip',
@@ -36,7 +35,7 @@ export class DeckSlipComponent implements OnInit {
   refresh: boolean;
   checked: boolean;
 
-  // @Output() close = new EventEmitter();
+  @Output() close = new EventEmitter<string>();
 
   constructor(
     private router: Router,
@@ -78,6 +77,7 @@ export class DeckSlipComponent implements OnInit {
   }
 
   viewDeck() {
+    console.log(this.deck);
     this.store.dispatch(deckActions.changeActiveDeck({ deck: this.deck }));
     this.router.navigateByUrl('/view');
   }
@@ -95,7 +95,7 @@ export class DeckSlipComponent implements OnInit {
   deleteDeck() {
     console.log(this.deck);
     this.store.dispatch(deckActions.deleteDeck({ deck: this.deck }));
-    // this.close.emit(null);
+    this.close.emit(this.deck.deckId);
   }
 
   checkbox() {

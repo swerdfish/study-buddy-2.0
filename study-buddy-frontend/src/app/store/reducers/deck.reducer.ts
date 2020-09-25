@@ -150,14 +150,16 @@ export const deckReducer = createReducer(
     deckActions.deleteActiveDeck,
     (state: DeckState) => {
       let deckToRemove = state.activeDeck;
-      state.activeDeck = null;
-      state.selectedDecks = state.selectedDecks.filter(
-        sdeck => sdeck.deckId != deckToRemove.deckId
-      );
-      state.userDecks = state.userDecks.filter(
-        udeck => udeck.deckId != deckToRemove.deckId
-      );
-      return state;
+      return {
+        ...state,
+        activeDeck: null,
+        selectedDecks: state.selectedDecks.filter(
+          sdeck => sdeck.deckId != deckToRemove.deckId
+        ),
+        userDecks: state.userDecks.filter(
+          udeck => udeck.deckId != deckToRemove.deckId
+        )
+      }
     }
   ),
   // deckActions.deleteDeck state update: see removeFromUserDecks

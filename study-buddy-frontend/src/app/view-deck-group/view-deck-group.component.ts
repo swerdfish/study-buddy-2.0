@@ -15,6 +15,7 @@ import { Utilities } from '../utilities';
 export class ViewDeckGroupComponent implements OnInit {
 
   getSelectedDecks: Observable<FlashcardDeck[]>;
+  selectedDecks: FlashcardDeck[];
   compositeDeck: CompositeDeck;
   currentCardIndex: number;
   showQuestion: boolean;
@@ -56,47 +57,74 @@ export class ViewDeckGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSelectedDecks.subscribe(selectedDecks => {
-      this.compositeDeck = new CompositeDeck(selectedDecks);
-      // Populate cards if not already populated
-      if (this.compositeDeck.compCards.length == 0) this.refreshDeckGroup();
-      // Start cardOrder in sequential order
-      this.cardOrder = [...Array(this.compositeDeck.compCards.length).keys()];
-      this.blackOrWhite = Utilities.calcBlackOrWhite(this.compositeDeck.compCards[this.cardOrder[this.currentCardIndex]].color);
+      if (selectedDecks.length > 0) {
+        this.selectedDecks = selectedDecks;
+        this.compositeDeck = new CompositeDeck(selectedDecks);
+        // Populate cards if not already populated
+        if (this.compositeDeck.compCards.length == 0) this.refreshDeckGroup();
+        // Start cardOrder in sequential order
+        this.cardOrder = [...Array(this.compositeDeck.compCards.length).keys()];
+        this.blackOrWhite = Utilities.calcBlackOrWhite(this.compositeDeck.compCards[this.cardOrder[this.currentCardIndex]].color);
+      }
     });
   }
 
   refreshDeckGroup(): void {
     this.refresh = !this.refresh;
-    this.getSelectedDecks.subscribe(selectedDecks => {
-      for (let s = 0; s < selectedDecks.length; s++) {
-        this.store.dispatch(deckActions.populateCardsForDeckId({ deckId: selectedDecks[s].deckId }));
-        // selectedDecks[s].populateCards(true);
-      }
-      console.log("new!");
-      this.compositeDeck = new CompositeDeck(selectedDecks);
-      let difference = this.compositeDeck.compCards.length - this.cardOrder.length;
-      if (difference < 0) {
-        // the amount of cards shrunk, remove elements from cardOrder
-        let newCardOrder = [];
-        for (let c = 0; c < this.cardOrder.length; c++) {
-          let suspectNumber = this.cardOrder[c];
-          if (suspectNumber < this.cardOrder.length + difference) {
-            newCardOrder.push(suspectNumber);
-          }
-        }
-        this.cardOrder = newCardOrder;
-      } else if (difference > 0) {
-        // the amount of cards increased, add elements to cardOrder
-        for (let d = 0; d < difference; d++) {
-          this.cardOrder.push(this.cardOrder.length + d);
+    for (let deckId of this.compositeDeck.deckIds) {
+      this.store.dispatch(deckActions.populateCardsForDeckId({ deckId: deckId }));
+    }
+    this.compositeDeck = new CompositeDeck(this.selectedDecks);
+    let difference = this.compositeDeck.compCards.length - this.cardOrder.length;
+    if (difference < 0) {
+      // the amount of cards shrunk, remove elements from cardOrder
+      let newCardOrder = [];
+      for (let c = 0; c < this.cardOrder.length; c++) {
+        let suspectNumber = this.cardOrder[c];
+        if (suspectNumber < this.cardOrder.length + difference) {
+          newCardOrder.push(suspectNumber);
         }
       }
-      if (this.currentCardIndex == this.compositeDeck.compCards.length - 1) {
-        this.currentCardIndex = 0;
+      this.cardOrder = newCardOrder;
+    } else if (difference > 0) {
+      // the amount of cards increased, add elements to cardOrder
+      for (let d = 0; d < difference; d++) {
+        this.cardOrder.push(this.cardOrder.length + d);
       }
-      console.log("done");
-    });
+    }
+    this.currentCardIndex %= this.compositeDeck.compCards.length;
     this.refresh = !this.refresh;
+    // this.refresh = !this.refresh;
+    // this.getSelectedDecks.subscribe(selectedDecks => {
+    //   for (let s = 0; s < selectedDecks.length; s++) {
+    //     this.store.dispatch(deckActions.populateCardsForDeckId({ deckId: selectedDecks[s].deckId }));
+    //     // selectedDecks[s].populateCards(true);
+    //   }
+    //   console.log("new!");
+    //   this.compositeDeck = new CompositeDeck(selectedDecks);
+    //   let difference = this.compositeDeck.compCards.length - this.cardOrder.length;
+    //   if (difference < 0) {
+    //     // the amount of cards shrunk, remove elements from cardOrder
+    //     let newCardOrder = [];
+    //     for (let c = 0; c < this.cardOrder.length; c++) {
+    //       let suspectNumber = this.cardOrder[c];
+    //       if (suspectNumber < this.cardOrder.length + difference) {
+    //         newCardOrder.push(suspectNumber);
+    //       }
+    //     }
+    //     this.cardOrder = newCardOrder;
+    //   } else if (difference > 0) {
+    //     // the amount of cards increased, add elements to cardOrder
+    //     for (let d = 0; d < difference; d++) {
+    //       this.cardOrder.push(this.cardOrder.length + d);
+    //     }
+    //   }
+    //   if (this.currentCardIndex == this.compositeDeck.compCards.length - 1) {
+    //     this.currentCardIndex = 0;
+    //   }
+    //   console.log("done");
+    // });
+    // this.refresh = !this.refresh;
   }
 
   reverseCards(): void {

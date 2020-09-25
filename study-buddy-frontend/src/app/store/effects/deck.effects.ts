@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { from, Observable } from 'rxjs';
+import { from, NEVER, Observable } from 'rxjs';
 import { map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import * as authActions from '../actions/auth.actions';
 import * as deckActions from '../actions/deck.actions';
@@ -39,9 +39,16 @@ export class DeckEffects {
     withLatestFrom(this.store$.select(selectActiveDeckAndToken)),
     // Update the backend by deleting the deck
     switchMap(([_, { activeDeck, token }]) => {
-      let activeDeckIdNumber = +activeDeck.deckId;
-      if (activeDeckIdNumber !== 0 && !activeDeckIdNumber) activeDeckIdNumber = 0;
-      return this.fdserv.deleteFlashcardDeckById(activeDeckIdNumber, token);
+      console.log("Deleting...");
+      if (activeDeck) {
+        console.log(activeDeck.deckId);
+        let activeDeckIdNumber = +activeDeck.deckId;
+        if (activeDeckIdNumber !== 0 && !activeDeckIdNumber) activeDeckIdNumber = 0;
+        return this.fdserv.deleteFlashcardDeckById(activeDeckIdNumber, token);
+      } else {
+        console.log("Did not find a deck to remove.");
+        return NEVER;
+      }
     }),
     // Set the new access token
     map((response: HttpResponse<void>) => new authActions.SetAccessToken(
@@ -207,9 +214,10 @@ export class DeckEffects {
       let qcol = deck.spreadsheetInfo.queCol;
       let acol = deck.spreadsheetInfo.ansCol;
       let headerRows = deck.spreadsheetInfo.headerRows;
+      let color = deck.color;
       return this.gserv.getValues(ssid, `'${title}'!${qcol}:${acol}`).pipe(
         map(resp => {
-          let popDeck = new FlashcardDeck(ssid, title, qcol, acol, headerRows, deckId);
+          let popDeck = new FlashcardDeck(ssid, title, qcol, acol, headerRows, deckId, color);
           popDeck.cards = [];
           if (qcol < acol) {
             for (let value of resp.result.values.slice(headerRows)) {
