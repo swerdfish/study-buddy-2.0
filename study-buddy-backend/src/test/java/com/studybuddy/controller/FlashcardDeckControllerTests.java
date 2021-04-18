@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -20,15 +21,16 @@ import com.studybuddy.model.SpreadsheetInfo;
 import com.studybuddy.model.User;
 import com.studybuddy.service.FlashcardDeckService;
 import com.studybuddy.service.SpreadsheetInfoService;
+import com.studybuddy.service.UserService;
 import com.studybuddy.verifier.GoogleTokenVerifier;
 
 @WebMvcTest(controllers = FlashcardDeckController.class)
 public class FlashcardDeckControllerTests {
 	
 	private MockMvc mockMvc;
-	private User testUser;
-	private User ownerUser;
-	private SpreadsheetInfo ssi;
+//	private User testUser;
+//	private User ownerUser;
+//	private SpreadsheetInfo ssi;
 	private FlashcardDeck fDeck;
 	private ObjectMapper mapper;
 	
@@ -37,16 +39,18 @@ public class FlashcardDeckControllerTests {
 	@MockBean
 	private SpreadsheetInfoService ssis;
 	@MockBean
+	private UserService usrs;
+	@MockBean
 	private GoogleTokenVerifier gtf;
 	
 	@Autowired
 	public FlashcardDeckControllerTests(WebApplicationContext context) {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
-				.apply(org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity())
+				.apply(SecurityMockMvcConfigurers.springSecurity())
 				.build();
-		this.testUser = User.createTestUser("0");
-		this.ownerUser = User.createTestUser("1");
-		this.ssi = SpreadsheetInfo.createTestSpreadsheetInfo();
+//		this.testUser = User.createTestUser("0");
+//		this.ownerUser = User.createTestUser("1");
+//		this.ssi = SpreadsheetInfo.createTestSpreadsheetInfo();
 		this.fDeck = FlashcardDeck.createTestFlashcardDeck();
 		this.mapper = new ObjectMapper();
 	}
@@ -55,13 +59,23 @@ public class FlashcardDeckControllerTests {
 	public void createFlashcardDeck_returnsCreated201() throws JsonProcessingException, Exception {
 		this.mockMvc.perform(
 				post("/flashcardDeck")
+				.requestAttr("userId", "test")
 				.content(this.mapper.writeValueAsString(this.fDeck))
 				.contentType("application/json"))
 		.andExpect(status().isCreated());
 	}
 	
 	@Test
-	public void createFlashcardDeckWithWrongObject_returnsNestedNullPointerException() throws JsonProcessingException, Exception {
+	public void createFlashcardDeckWithoutUserId_returnsForbidden403() throws JsonProcessingException, Exception {
+		this.mockMvc.perform(
+				post("/flashcardDeck")
+				.content(this.mapper.writeValueAsString(this.fDeck))
+				.contentType("application/json"))
+		.andExpect(status().isForbidden());
+	}
+	
+	@Test
+	public void createFlashcardDeckWithWrongObject_returnsNestedNullPointerException() {
 		assertThrows(NullPointerException.class, () -> {
 			try {
 				this.mockMvc.perform(

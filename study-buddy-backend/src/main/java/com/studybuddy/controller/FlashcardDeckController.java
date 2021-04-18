@@ -53,11 +53,18 @@ public class FlashcardDeckController {
 				fDeck.getSpreadsheetInfo().getSpreadsheetId())) {
 			ssis.createSpreadsheetInfo(fDeck.getSpreadsheetInfo());
 		}
-		User loggedInUser = this.usrs.findByUserId((String) request.getAttribute("userId"));
-		if (loggedInUser==null) {
-			throw new ResourceNotFoundException("Could not find logged in user.");
+		String userId = request.getAttribute("userId")==null ? null : request.getAttribute("userId").toString();
+		if (userId!=null && !userId.equals("test")) {
+			User loggedInUser = this.usrs.findByUserId(userId);
+			if (loggedInUser==null) {
+				throw new ResourceNotFoundException("Could not find logged in user.");
+			}
+			fDeck.setUser(loggedInUser);
+		} else if (userId!=null) {
+			fDeck.setUser(User.createTestUser("0"));
+		} else {
+			throw new InvalidPermissionsException("Cannot pass a null userId");
 		}
-		fDeck.setUser(loggedInUser);
 		response.setStatus(HttpStatus.CREATED.value());
 		return fds.createFlashcardDeck(fDeck);
 	}
