@@ -57,6 +57,11 @@ export const deleteDeck = createAction(
   props<{ deck: FlashcardDeck }>()
 );
 
+export const deleteDeckSuccessful = createAction(
+  '[Deck] Delete Deck Successful',
+  props<{ deck: FlashcardDeck }>()
+);
+
 export const deleteDeckById = createAction(
   '[Deck] Delete Deck by Id',
   props<{ deckId: string }>()
