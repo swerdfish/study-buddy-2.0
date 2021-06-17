@@ -15,14 +15,15 @@
                 </button>
 
                 <div style="width: 100%">
-                    <div class="card">
-                        <!--; background-color: red;">-->
+                    <div class="card" [ngStyle]="{'background-color': this.deck.color}">
                         <a (click)="flipCard()">
                             <div class="card-content">
-                                <p class="title" *ngIf="deck.cards.length && showQuestion">
+                                <p [ngClass]="blackOrWhite ? 'title' : 'title has-text-light'"
+                                    *ngIf="deck.cards.length && showQuestion">
                                     {{deck.cards[cardOrder[currentCardIndex]]["question"]}}
                                 </p>
-                                <p class="subtitle" *ngIf="deck.cards.length && !showQuestion">
+                                <p [ngClass]="blackOrWhite ? 'subtitle' : 'subtitle has-text-grey-light'"
+                                    *ngIf="deck.cards.length && !showQuestion">
                                     {{deck.cards[cardOrder[currentCardIndex]]["answer"]}}
                                 </p>
                             </div>

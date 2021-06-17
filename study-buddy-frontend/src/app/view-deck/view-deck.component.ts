@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectActiveDeck } from '../store';
 import * as deckActions from '../store/actions/deck.actions';
+import { Utilities } from '../utilities';
 
 @Component({
   selector: 'app-view-deck',
@@ -15,6 +16,7 @@ export class ViewDeckComponent implements OnInit {
 
   getActiveDeck: Observable<FlashcardDeck>;
   deck: FlashcardDeck;
+  blackOrWhite: boolean;
   currentCardIndex: number;
   showQuestion: boolean;
   refresh: boolean;
@@ -40,6 +42,7 @@ export class ViewDeckComponent implements OnInit {
       } else {
         this.cardOrder = [];
       }
+      this.blackOrWhite = Utilities.calcBlackOrWhite(this.deck.color);
     })
   }
 
@@ -98,5 +101,6 @@ export class ViewDeckComponent implements OnInit {
     this.cardOrder = [...Array(this.deck.cards.length).keys()];
     this.showQuestion = true;
   }
+
 
 }
